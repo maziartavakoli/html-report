@@ -1,0 +1,2144 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>گزارش هفتگی تیم فنی</title>
+<style>
+:root{--bg:#0d111a;--card:#1c2237;--text:#fff;--muted:#94a3b8;--blue:#38bdf8;--border:rgba(255,255,255,0.06)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Tahoma,Arial,sans-serif;background:var(--bg);color:var(--text);padding:20px}
+.container{max-width:1150px;margin:0 auto}
+.header{background:linear-gradient(135deg,#1c2237,#162032);border-radius:20px;padding:28px 32px;margin-bottom:20px;border:1px solid rgba(56,189,248,0.2);display:flex;justify-content:space-between;align-items:center;box-shadow:0 4px 24px rgba(0,0,0,0.3)}
+.header h1{font-size:1.5rem;color:var(--blue)}
+.header .week{color:var(--muted);font-size:0.88rem;margin-top:5px}
+.header-badge{background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.3);color:var(--blue);padding:6px 16px;border-radius:20px;font-size:0.83rem}
+.kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:20px}
+.kpi{background:var(--card);border-radius:14px;padding:18px;text-align:center;border:1px solid var(--border);transition:transform 0.2s}
+.kpi:hover{transform:translateY(-2px)}
+.kpi .num{font-size:2.2rem;font-weight:900;line-height:1}
+.kpi .label{color:var(--muted);font-size:0.8rem;margin-top:6px}
+.kpi.green{border-bottom:3px solid #34d399}.kpi.green .num{color:#34d399}
+.kpi.orange{border-bottom:3px solid #fbbf24}.kpi.orange .num{color:#fbbf24}
+.kpi.red{border-bottom:3px solid #f87171}.kpi.red .num{color:#f87171}
+.kpi.blue{border-bottom:3px solid var(--blue)}.kpi.blue .num{color:var(--blue)}
+.kpi.purple{border-bottom:3px solid #a78bfa}.kpi.purple .num{color:#a78bfa}
+.section-title{font-size:0.78rem;font-weight:bold;color:var(--muted);margin-bottom:12px;text-transform:uppercase;letter-spacing:1.5px;display:flex;align-items:center;gap:8px}
+.section-title::after{content:'';flex:1;height:1px;background:var(--border)}
+.chart-card{background:var(--card);border-radius:16px;padding:22px;margin-bottom:20px;border:1px solid var(--border)}
+.bar-wrapper{margin-bottom:14px}
+.bar-info{display:flex;justify-content:space-between;font-size:0.85rem;margin-bottom:6px}
+.bar-container{height:10px;background:rgba(255,255,255,0.06);border-radius:10px;overflow:hidden}
+.bar-fill{height:100%;border-radius:10px}
+.bug-section{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px}
+.bug-card{background:var(--card);border-radius:16px;padding:22px;border:1px solid var(--border)}
+.donut-wrap{display:flex;align-items:center;gap:24px}
+.donut{width:90px;height:90px;border-radius:50%;background:conic-gradient(#f87171 0% 20%,rgba(248,113,113,0.1) 20% 100%);display:flex;align-items:center;justify-content:center;position:relative;flex-shrink:0}
+.donut::before{content:'';position:absolute;width:64px;height:64px;border-radius:50%;background:var(--card)}
+.donut-num{position:relative;z-index:1;font-size:1.1rem;font-weight:900;color:#f87171}
+.bug-stats{flex:1}
+.bug-stat-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);font-size:0.85rem}
+.bug-stat-row:last-child{border-bottom:none}
+.gantt-card{background:var(--card);border-radius:16px;padding:22px;margin-bottom:20px;border:1px solid var(--border)}
+.gantt-legend{display:flex;gap:20px;margin-bottom:16px;flex-wrap:wrap;padding:12px 16px;background:rgba(255,255,255,0.03);border-radius:10px}
+.gantt-legend-item{display:flex;align-items:center;gap:7px;font-size:0.8rem;color:var(--muted)}
+.gantt-legend-dot{width:14px;height:10px;border-radius:3px;flex-shrink:0}
+.gantt-axis{position:relative;height:28px;margin-right:220px;margin-bottom:4px;border-bottom:1px solid var(--border)}
+.gt-axis-label{position:absolute;font-size:0.68rem;color:var(--muted);transform:translateX(50%);bottom:4px;white-space:nowrap}
+.gantt-proj-block{margin-bottom:14px;border-radius:12px;overflow:hidden;border:1px solid var(--border)}
+.gantt-proj-toggle{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;cursor:pointer;background:rgba(255,255,255,0.03);user-select:none}
+.gantt-proj-toggle:hover{background:rgba(255,255,255,0.05)}
+.gt-toggle-icon{color:var(--muted);font-size:0.8rem;transition:transform 0.3s}
+.gantt-proj-body{overflow-x:auto;background:rgba(0,0,0,0.15)}
+.gt-inner{min-width:600px;padding:8px 0}
+.gt-row{display:flex;align-items:center;padding:3px 12px;min-height:36px}
+.gt-row:hover{background:rgba(255,255,255,0.02)}
+.gt-label{width:220px;flex-shrink:0;padding-left:8px}
+.gt-label-name{font-size:0.78rem;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gt-label-meta{font-size:0.68rem;color:var(--muted);margin-top:2px}
+.gt-track{flex:1;height:24px;background:rgba(255,255,255,0.03);border-radius:6px;position:relative;margin:0 4px}
+.gt-bar{position:absolute;height:100%;border-radius:6px;min-width:4px;cursor:pointer;display:flex;align-items:center;overflow:hidden;transition:filter 0.2s}
+.gt-bar:hover{filter:brightness(1.25);z-index:10}
+.gt-bar-label{font-size:0.65rem;color:rgba(0,0,0,0.7);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 6px;font-weight:bold}
+.team-card{background:var(--card);border-radius:14px;margin-bottom:12px;overflow:hidden;border:1px solid var(--border)}
+.team-header{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;cursor:pointer;user-select:none}
+.team-header:hover{background:rgba(255,255,255,0.02)}
+.team-title{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.team-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.team-badge{background:rgba(255,255,255,0.07);color:var(--muted);padding:2px 10px;border-radius:20px;font-size:0.75rem}
+.team-stats{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.stat-pill{padding:3px 10px;border-radius:20px;font-size:0.75rem}
+.stat-pill.green{background:rgba(52,211,153,0.1);color:#34d399}
+.stat-pill.orange{background:rgba(251,191,36,0.1);color:#fbbf24}
+.stat-pill.red{background:rgba(248,113,113,0.1);color:#f87171}
+.stat-pill.blue{background:rgba(56,189,248,0.1);color:var(--blue)}
+.toggle-icon{color:var(--muted);font-size:0.75rem;transition:transform 0.3s}
+.bar-mini{height:3px;background:rgba(255,255,255,0.04)}
+.team-body{padding:0 18px 18px}
+table{width:100%;border-collapse:collapse;font-size:0.8rem;margin-top:12px}
+th{color:var(--muted);font-weight:normal;padding:8px;border-bottom:1px solid var(--border);text-align:right;white-space:nowrap}
+td{padding:8px;border-bottom:1px solid var(--border);color:var(--text);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(255,255,255,0.015)}
+.footer{text-align:center;color:var(--muted);font-size:0.75rem;margin-top:24px;padding-top:16px;border-top:1px solid var(--border)}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div>
+      <h1>📊 گزارش هفتگی تیم فنی</h1>
+      <div class="week" id="report-range">📅 بازه زمانی: <strong style="color:#fff"></strong></div>
+    </div>
+    <div class="header-badge" id="task-count">🔢 0 تسک در این اسپرینت</div>
+  </div>
+
+  <div class="kpi-row" id="kpi-row"></div>
+
+  <div class="section-title">📊 ساعت کار به تفکیک پروژه</div>
+  <div class="chart-card" id="project-hours"></div>
+
+  <div class="bug-section" id="bug-section"></div>
+
+  <div class="section-title">📅 نمودار گانت — به تفکیک پروژه</div>
+  <div class="gantt-card" id="gantt-card"></div>
+
+  <div class="section-title">📁 تسک‌ها به تفکیک پروژه — مرتب بر اساس ساعت</div>
+  <div id="team-cards"></div>
+
+  <div class="footer" id="footer">گزارش تولید شده توسط n8n automation</div>
+</div>
+<script>
+const rawTasks = [
+  {
+    "project": "User & Order domain\ud83d\uded2",
+    "task": "\u0646\u0648\u0639 \u06a9\u0648\u067e\u0646 \u0645\u0628\u0644\u063a \u062a\u062e\u0641\u06cc\u0641",
+    "assignee": "\u06a9\u06cc\u0648\u0627\u0646 \u067e\u0648\u0631\u0633\u0644\u0637\u0627\u0646\u06cc",
+    "responsibility": "\u0647\u0645\u0647(\u067e\u06cc\u0634 \u0641\u0631\u0636)",
+    "team": "\u062a\u06cc\u0645 \u0628\u06a9 \u0627\u0646\u062f",
+    "createdAt": "1405/01/23",
+    "startAt": "1405/01/23",
+    "dueAt": "1405/01/23",
+    "endAt": "-",
+    "priority": "-",
+    "status": "\u062f\u0631\u062d\u0627\u0644 \u0627\u0646\u062c\u0627\u0645",
+    "estimateHours": null,
+    "actualHours": null,
+    "storyPoint": null,
+    "goal": "-",
+    "label": null
+  },
+  {
+    "project": "User & Order domain\ud83d\uded2",
+    "task": "\u062f\u0631\u0633\u062a \u06a9\u0631\u062f\u0646 \u0633\u0631\u0686 \u0635\u0641\u062d\u0647 \u062f\u0631\u062e\u0648\u0627\u0633\u062a \u0648\u062c\u0647\u200c\u0647\u0627 \u0648 \u0632\u062f\u0646 \u0648\u0628 \u0633\u0631\u0648\u06cc\u0633 \u067e\u06cc\u0634\u06cc\u0646\u0647 \u06a9\u0627\u0631\u0628\u0631",
+    "assignee": "\u06a9\u06cc\u0648\u0627\u0646 \u067e\u0648\u0631\u0633\u0644\u0637\u0627\u0646\u06cc",
+    "responsibility": "\u0647\u0645\u0647(\u067e\u06cc\u0634 \u0641\u0631\u0636)",
+    "team": "\u062a\u06cc\u0645 \u0628\u06a9 \u0627\u0646\u062f",
+    "createdAt": "1405/01/17",
+    "startAt": "1405/01/17",
+    "dueAt": "1405/01/17",
+    "endAt": "-",
+    "priority": "-",
+    "status": "\u062f\u0631\u062d\u0627\u0644 \u0627\u0646\u062c\u0627\u0645",
+    "estimateHours": 0.5,
+    "actualHours": null,
+    "storyPoint": null,
+    "goal": "-",
+    "label": null
+  },
+  {
+    "project": "AI eng",
+    "task": "add vendor lookup table Mauticflow",
+    "assignee": "\u0645\u062d\u0645\u062f \u0645\u0647\u062f\u06cc \u0632\u0627\u062f\u0647",
+    "responsibility": "\u0647\u0645\u0647(\u067e\u06cc\u0634 \u0641\u0631\u0636)",
+    "team": "\u062a\u06cc\u0645 \u0628\u06a9 \u0627\u0646\u062f",
+    "createdAt": "1405/01/16",
+    "startAt": "1405/01/16",
+    "dueAt": "1405/01/16",
+    "endAt": "-",
+    "priority": "-",
+    "status": "\u062f\u0631\u062d\u0627\u0644 \u0627\u0646\u062c\u0627\u0645",
+    "estimateHours": null,
+    "actualHours": null,
+    "storyPoint": null,
+    "goal": "-",
+    "label": null
+  },
+  {
+    "project": "User & Order domain\ud83d\uded2",
+    "task": "\u0633\u0631\u0686",
+    "assignee": "\u0645\u062d\u0645\u062f\u06a9\u0631\u06cc\u0645\u062f\u0627\u062f\u06cc",
+    "responsibility": "\u0647\u0645\u0647(\u067e\u06cc\u0634 \u0641\u0631\u0636)",
+    "team": "\u062a\u06cc\u0645 \u0641\u0631\u0627\u0646\u062a",
+    "createdAt": "1405/01/16",
+    "startAt": "1405/01/16",
+    "dueAt": "1405/01/16",
+    "endAt": "-",
+    "priority": "\u0628\u0627\u0644\u0627",
+    "status": "\u062f\u0631\u062d\u0627\u0644 \u0627\u0646\u062c\u0627\u0645",
+    "estimateHours": null,
+    "actualHours": null,
+    "storyPoint": null,
+    "goal": "-",
+    "label": "BUG"
+  },
+  {
+    "project": "User & Order domain\ud83d\uded2",
+    "task": "\u0633\u0631\u0686",
+    "assignee": "\u0645\u062a\u06cc\u0646 \u0631\u0645\u0636\u0627\u0646\u06cc \u06a9\u0631\u06cc\u0645",
+    "responsibility": "\u0647\u0645\u0647(\u067e\u06cc\u0634 \u0641\u0631\u0636)",
+    "team": "\u062a\u06cc\u0645 \u0641\u0644\u0627\u062a\u0631",
+    "createdAt": "1405/01/16",
+    "startAt": "1405/01/16",
+    "dueAt": "1405/01/16",
+    "endAt": "-",
+    "priority": "\u0628\u0627\u0644\u0627",
+    "status": "\u062f\u0631\u062d\u0627\u0644 \u0627\u0646\u062c\u0627\u0645",
+    "estimateHours": 1,
+    "actualHours": null,
+    "storyPoint": null,
+    "goal": "-",
+    "label": "BUG"
+  },
+  {
+    "project": "User & Order domain\ud83d\uded2",
+    "task": "\u0644\u0646\u062f\u06cc\u0646\u06af \u0627\u06cc\u062c\u0627\u062f \u0645\u062c\u0645\u0648\u0639\u0647",
+    "assignee": "\u0645\u062d\u0645\u062f\u06a9\u0631\u06cc\u0645\u062f\u0627\u062f\u06cc",
+    "responsibility": "\u0647\u0645\u0647(\u067e\u06cc\u0634 \u0641\u0631\u0636)",
+    "team": "\u062a\u06cc\u0645 \u0641\u0631\u0627\u0646\u062a",
+    "createdAt": "1405/01/16",
+    "startAt": "1405/01/16",
+    "dueAt": "1405/01/16",
+    "endAt": "-",
+    "priority": "\u0628\u0627\u0644\u0627",
+    "status": "\u062f\u0631\u062d\u0627\u0644 \u0627\u0646\u062c\u0627\u0645",
+    "estimateHours": 1,
+    "actualHours": null,
+    "storyPoint": null,
+    "goal": "-",
+    "label": "BUG"
+  },
+  {
+    "project": "User & Order domain\ud83d\uded2",
+    "task": "\u0644\u0646\u062f\u06cc\u0646\u06af \u0627\u06cc\u062c\u0627\u062f \u0645\u062c\u0645\u0648\u0639\u0647",
+    "assignee": "\u0645\u062a\u06cc\u0646 \u0631\u0645\u0636\u0627\u0646\u06cc \u06a9\u0631\u06cc\u0645",
+    "responsibility": "\u0647\u0645\u0647(\u067e\u06cc\u0634 \u0641\u0631\u0636)",
+    "team": "\u062a\u06cc\u0645 \u0641\u0644\u0627\u062a\u0631",
+    "createdAt": "1405/01/16",
+    "startAt": "1405/01/16",
+    "dueAt": "1405/01/16",
+    "endAt": "-",
+    "priority": "\u0628\u0627\u0644\u0627",
+    "status": "\u062f\u0631\u062d\u0627\u0644 \u0627\u0646\u062c\u0627\u0645",
+    "estimateHours": 1,
+    "actualHours": null,
+    "storyPoint": null,
+    "goal": "-",
+    "label": "BUG"
+  },
+  {
+    "project": "Store Domain \ud83c\udfea",
+    "task": "best seller line for supermarket",
+    "assignee": "\u0645\u062d\u0645\u062f \u0645\u062d\u0628\u06cc",
+    "responsibility": "\u0647\u0645\u0647(\u067e\u06cc\u0634 \u0641\u0631\u0636)",
+    "team": "devOps",
+    "createdAt": "1405/01/16",
+    "startAt": "1405/01/16",
+    "dueAt": "1405/01/16",
+    "endAt": "-",
+    "priority": "-",
+    "status": "\u062f\u0631\u062d\u0627\u0644 \u0627\u0646\u062c\u0627\u0645",
+    "estimateHours": null,
+    "actualHours": null,
+    "storyPoint": null,
+    "goal": "-",
+    "label": null
+  },
+  {
+    "project": "Logistic",
+    "task": "\u0648\u0628 \u0633\u0631\u0648\u06cc\u0633 \u0628\u0631\u0627\u06cc \u0627\u06cc\u0646\u06a9\u0647 orderStore \u0628\u062f\u06cc\u0645 \u0648 \u0628\u06af\u0645 \u06a9\u0647 \u0645\u06cc\u0634\u0647 \u0633\u0641\u0627\u0631\u0634 \u0631\u0648 \u0627\u0632 \u0644\u06cc\u0633\u062a \u062d\u0630\u0641 \u06a9\u0631\u062f \u06cc\u0627 \u0646\u0647",
+    "assignee": "\u0633\u0639\u06cc\u062f \u0633\u0627\u0639\u062f \u0646\u0638\u0631\u06cc",
+    "responsibility": "BE",
+    "team": "\u062a\u06cc\u0645 \u0628\u06a9 \u0627\u0646\u062f",
+    "createdAt": "1404/12/16",
+    "startAt": "1405/01/19",
+    "dueAt": "1405/01/19",
+    "endAt": "-",
+    "priority": "-",
+    "status": "\u062f\u0631\u062d\u0627\u0644 \u0627\u0646\u062c\u0627\u0645",
+    "estimateHours": 9,
+    "actualHours": null,
+    "storyPoint": null,
+    "goal": "-",
+    "label": null
+  },
+  {
+    "project": "Store Domain \ud83c\udfea",
+    "task": "\u0627\u062f\u06cc\u062a \u0627\u0645\u0648\u0632\u0634 \u062f\u0631 \u067e\u0646\u0644",
+    "assignee": "\u067e\u0648\u06cc\u0627 \u062d\u062c\u0627\u0631",
+    "responsibility": "\u0641\u0631\u0627\u0646\u062a",
+    "team": "\u062a\u06cc\u0645 \u0641\u0631\u0627\u0646\u062a",
+    "createdAt": "1405/01/24",
+    "startAt": "-",
+    "dueAt": "-",
+    "endAt": "-",
+    "priority": "-",
+    "status": "\u062f\u0631\u062d\u0627\u0644 \u0627\u0646\u062c\u0627\u0645",
+    "estimateHours": null,
+    "actualHours": null,
+    "storyPoint": null,
+    "goal": "-",
+    "label": null
+  },
+  {
+    "project": "Store Domain \ud83c\udfea",
+    "task": "\u062f\u06a9\u0645\u0647 \u0686\u0627\u067e/\u0628\u0627\u0631\u06a9\u062f",
+    "assignee": "\u067e\u0648\u06cc\u0627 \u062d\u062c\u0627\u0631",
+    "responsibility": "\u0641\u0631\u0627\u0646\u062a",
+    "team": "\u062a\u06cc\u0645 \u0641\u0631\u0627\u0646\u062a",
+    "createdAt": "1405/01/24",
+    "startAt": "-",
+    "dueAt": "-",
+    "endAt": "-",
+    "priority": "-",
+    "status": "\u062f\u0631\u062d\u0627\u0644 \u0627\u0646\u062c\u0627\u0645",
+    "estimateHours": null,
+    "actualHours": null,
+    "storyPoint": null,
+    "goal": "-",
+    "label": null
+  },
+  {
+    "project": "Store Domain \ud83c\udfea",
+    "task": "\u0637\u0631\u0627\u062d\u06cc \u0635\u0641\u062d\u0647 \u0627\u0645\u0648\u0632\u0634 \u0647\u0627",
+    "assignee": "\u0645\u0647\u062f\u06cc \u0634\u06cc\u0631\u0648\u0627\u0646\u06cc",
+    "responsibility": "\u0627\u0639\u062a\u0628\u0627\u0631 \u0633\u0646\u062c\u06cc",
+    "team": "\u062a\u06cc\u0645 \u0628\u06a9 \u0627\u0646\u062f",
+    "createdAt": "1405/01/17",
+    "startAt": "1405/01/17",
+    "dueAt": "1405/01/17",
+    "endAt": "-",
+    "priority": "-",
+    "status": "\u0645\u062a\u0648\u0642\u0641 \u0634\u062f\u0647",
+    "estimateHours": null,
+    "actualHours": null,
+    "storyPoint": null,
+    "goal": "-",
+    "label": null
+  },
+  {
+    "project": "AI eng",
+    "task": "add missing source data",
+    "assignee": "\u0645\u062d\u0645\u062f \u0645\u0647\u062f\u06cc \u0632\u0627\u062f\u0647",
+    "responsibility": "\u0647\u0645\u0647(\u067e\u06cc\u0634 \u0641\u0631\u0636)",
+    "team": "\u062a\u06cc\u0645 \u0628\u06a9 \u0627\u0646\u062f",
+    "createdAt": "1405/01/24",
+    "startAt": "1405/01/23",
+    "dueAt": "1405/01/23",
+    "endAt": "1405/01/24",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 4,
+    "actualHours": 4,
+    "storyPoint": null,
+    "goal": "-",
+    "label": null
+  },
+  {
+    "project": "Store Domain \ud83c\udfea",
+    "task": "\u0627\u062f\u06cc\u062a \u0627\u0645\u0648\u0632\u0634 \u062f\u0631 \u067e\u0646\u0644",
+    "assignee": "\u062f\u06cc\u0646\u0627 \u0646\u0627\u0638\u0645\u06cc",
+    "responsibility": "\u0637\u0631\u0627\u062d\u06cc",
+    "team": "\u062a\u06cc\u0645 UI-UX",
+    "createdAt": "1405/01/24",
+    "startAt": "1405/01/23",
+    "dueAt": "1405/01/23",
+    "endAt": "1405/01/24",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 1,
+    "actualHours": 1,
+    "storyPoint": null,
+    "goal": "-",
+    "label": null
+  },
+  {
+    "project": "Store Domain \ud83c\udfea",
+    "task": "\u062a\u0633\u062a \u067e\u0631\u0648\u062f\u0627\u06a9\u062a \u0634\u0648",
+    "assignee": "\u062f\u06cc\u0646\u0627 \u0646\u0627\u0638\u0645\u06cc",
+    "responsibility": "\u0647\u0645\u0647(\u067e\u06cc\u0634 \u0641\u0631\u0636)",
+    "team": "\u062a\u06cc\u0645 UI-UX",
+    "createdAt": "1405/01/24",
+    "startAt": "1405/01/23",
+    "dueAt": "1405/01/23",
+    "endAt": "1405/01/24",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 1,
+    "actualHours": 1,
+    "storyPoint": null,
+    "goal": "-",
+    "label": null
+  },
+  {
+    "project": "Logistic",
+    "task": "centrifuge refactor",
+    "assignee": "\u0627\u0645\u06cc\u0631\u0631\u0636\u0627 \u0642\u0627\u0633\u0645\u06cc",
+    "responsibility": "BE",
+    "team": "\u062a\u06cc\u0645 \u0641\u0631\u0627\u0646\u062a",
+    "createdAt": "1405/01/24",
+    "startAt": "1405/01/22",
+    "dueAt": "1405/01/23",
+    "endAt": "1405/01/24",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 4,
+    "actualHours": 4,
+    "storyPoint": null,
+    "goal": "-",
+    "label": null
+  },
+  {
+    "project": "Store Domain \ud83c\udfea",
+    "task": "\u062f\u06a9\u0645\u0647 \u0686\u0627\u067e/\u0628\u0627\u0631\u06a9\u062f",
+    "assignee": "\u062f\u06cc\u0646\u0627 \u0646\u0627\u0638\u0645\u06cc",
+    "responsibility": "\u0647\u0645\u0647(\u067e\u06cc\u0634 \u0641\u0631\u0636)",
+    "team": "\u062a\u06cc\u0645 UI-UX",
+    "createdAt": "1405/01/24",
+    "startAt": "1405/01/23",
+    "dueAt": "1405/01/23",
+    "endAt": "1405/01/24",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 1,
+    "actualHours": 1,
+    "storyPoint": null,
+    "goal": "-",
+    "label": null
+  },
+  {
+    "project": "Logistic",
+    "task": "courier refactor",
+    "assignee": "\u0627\u0645\u06cc\u0631\u0631\u0636\u0627 \u0642\u0627\u0633\u0645\u06cc",
+    "responsibility": "FE",
+    "team": "\u062a\u06cc\u0645 \u0641\u0631\u0627\u0646\u062a",
+    "createdAt": "1405/01/24",
+    "startAt": "1405/01/22",
+    "dueAt": "1405/01/23",
+    "endAt": "1405/01/24",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": null,
+    "actualHours": 13,
+    "storyPoint": null,
+    "goal": "-",
+    "label": null
+  },
+  {
+    "project": "Store Domain \ud83c\udfea",
+    "task": "\u0628\u0631\u0631\u0633\u06cc  \u0639\u062f\u0645 \u0622\u067e\u062f\u06cc\u062a \u0645\u062d\u0635\u0648\u0644\u0627\u062a \u062f\u06cc\u0644\u06cc \u0645\u0627\u0631\u06a9\u062a",
+    "assignee": "\u0645\u0635\u062f\u0642\u0647 \u0627\u0641\u0636\u0644\u06cc",
+    "responsibility": "\u0647\u0645\u0647(\u067e\u06cc\u0634 \u0641\u0631\u0636)",
+    "team": "\u062a\u06cc\u0645 \u0628\u06a9 \u0627\u0646\u062f",
+    "createdAt": "1405/01/24",
+    "startAt": "1405/01/23",
+    "dueAt": "1405/01/23",
+    "endAt": "1405/01/23",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 3,
+    "actualHours": 3,
+    "storyPoint": null,
+    "goal": "-",
+    "label": null
+  },
+  {
+    "project": "AI eng",
+    "task": "add reason for each order for why high or low score",
+    "assignee": "\u0645\u062d\u0645\u062f \u062d\u0627\u06a9\u0645\u06cc",
+    "responsibility": "\u0647\u0645\u0647(\u067e\u06cc\u0634 \u0641\u0631\u0636)",
+    "team": "\u062a\u06cc\u0645 \u0628\u06a9 \u0627\u0646\u062f",
+    "createdAt": "1405/01/24",
+    "startAt": "1405/01/23",
+    "dueAt": "1405/01/23",
+    "endAt": "1405/01/23",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 4,
+    "actualHours": 4,
+    "storyPoint": null,
+    "goal": "-",
+    "label": null
+  },
+  {
+    "project": "AI eng",
+    "task": "make impact deviation in final score",
+    "assignee": "\u0645\u062d\u0645\u062f \u062d\u0627\u06a9\u0645\u06cc",
+    "responsibility": "\u0647\u0645\u0647(\u067e\u06cc\u0634 \u0641\u0631\u0636)",
+    "team": "\u062a\u06cc\u0645 \u0628\u06a9 \u0627\u0646\u062f",
+    "createdAt": "1405/01/24",
+    "startAt": "1405/01/23",
+    "dueAt": "1405/01/23",
+    "endAt": "1405/01/23",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 2,
+    "actualHours": 2,
+    "storyPoint": null,
+    "goal": "-",
+    "label": null
+  },
+  {
+    "project": "AI eng",
+    "task": "more real dist and dur for score calculation",
+    "assignee": "\u0645\u062d\u0645\u062f \u062d\u0627\u06a9\u0645\u06cc",
+    "responsibility": "\u0647\u0645\u0647(\u067e\u06cc\u0634 \u0641\u0631\u0636)",
+    "team": "\u062a\u06cc\u0645 \u0628\u06a9 \u0627\u0646\u062f",
+    "createdAt": "1405/01/24",
+    "startAt": "1405/01/23",
+    "dueAt": "1405/01/23",
+    "endAt": "1405/01/23",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 1,
+    "actualHours": 1,
+    "storyPoint": null,
+    "goal": "-",
+    "label": null
+  },
+  {
+    "project": "User & Order domain\ud83d\uded2",
+    "task": "\u062a\u0633\u062a",
+    "assignee": "\u0645\u062a\u06cc\u0646 \u0631\u0645\u0636\u0627\u0646\u06cc \u06a9\u0631\u06cc\u0645",
+    "responsibility": "\u0647\u0645\u0647(\u067e\u06cc\u0634 \u0641\u0631\u0636)",
+    "team": "\u062a\u06cc\u0645 \u0641\u0644\u0627\u062a\u0631",
+    "createdAt": "1405/01/23",
+    "startAt": "1405/01/23",
+    "dueAt": "1405/01/23",
+    "endAt": "1405/01/23",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 9,
+    "actualHours": 9,
+    "storyPoint": null,
+    "goal": "-",
+    "label": "test"
+  },
+  {
+    "project": "Logistic",
+    "task": "\u0627\u067e\u0644\u0648\u062f \u0639\u06a9\u0633 \u0648 \u0627\u0633\u06a9\u0631\u06cc\u0646 \u0634\u0627\u062a \u062f\u0631 \u0645\u0627\u06cc\u06a9\u062a",
+    "assignee": "\u0635\u0627\u0644\u062d \u0631\u0636\u0627\u064a\u06cc",
+    "responsibility": "BE",
+    "team": "\u062a\u06cc\u0645 \u0641\u0644\u0627\u062a\u0631",
+    "createdAt": "1405/01/23",
+    "startAt": "1405/01/23",
+    "dueAt": "1405/01/23",
+    "endAt": "1405/01/24",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 1,
+    "actualHours": 1,
+    "storyPoint": null,
+    "goal": "-",
+    "label": "Improvement"
+  },
+  {
+    "project": "Logistic",
+    "task": "\u0627\u067e\u0644\u0648\u062f \u0645\u062c\u062f\u062f \u0627\u067e\u0644\u06cc\u06a9\u06cc\u0634\u0646 \u0633\u0641\u06cc\u0631\u0627\u0646 \u062f\u0631 \u0645\u0627\u06cc\u06a9\u062a",
+    "assignee": "\u0635\u0627\u0644\u062d \u0631\u0636\u0627\u064a\u06cc",
+    "responsibility": "BE",
+    "team": "\u062a\u06cc\u0645 \u0641\u0644\u0627\u062a\u0631",
+    "createdAt": "1405/01/23",
+    "startAt": "1405/01/23",
+    "dueAt": "1405/01/23",
+    "endAt": "1405/01/23",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 2,
+    "actualHours": 2,
+    "storyPoint": null,
+    "goal": "-",
+    "label": "Documentation"
+  },
+  {
+    "project": "Logistic",
+    "task": "\u062d\u0644 \u0627\u06cc\u0631\u0627\u062f\u0627\u062a \u06af\u0632\u0627\u0631\u0634 \u0634\u062f\u0647 \u062f\u0631 \u0627\u067e\u0644\u06cc\u06a9\u06cc\u0634\u0646 \u0633\u0641\u06cc\u0631\u0627\u0646",
+    "assignee": "\u0635\u0627\u0644\u062d \u0631\u0636\u0627\u064a\u06cc",
+    "responsibility": "BE",
+    "team": "\u062a\u06cc\u0645 \u0641\u0644\u0627\u062a\u0631",
+    "createdAt": "1405/01/23",
+    "startAt": "1405/01/23",
+    "dueAt": "1405/01/23",
+    "endAt": "1405/01/23",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 5,
+    "actualHours": 5,
+    "storyPoint": null,
+    "goal": "-",
+    "label": "Bug"
+  },
+  {
+    "project": "User & Order domain\ud83d\uded2",
+    "task": "\u0646\u0648\u0639 \u06a9\u0648\u067e\u0646 \u0645\u0628\u0644\u063a \u062a\u062e\u0641\u06cc\u0641",
+    "assignee": "\u0645\u062d\u0645\u062f \u0627\u0645\u06cc\u0646 \u0645\u062d\u0645\u0648\u062f\u06cc",
+    "responsibility": "\u0647\u0645\u0647(\u067e\u06cc\u0634 \u0641\u0631\u0636)",
+    "team": "\u062a\u06cc\u0645 \u0628\u06a9 \u0627\u0646\u062f",
+    "createdAt": "1405/01/23",
+    "startAt": "1405/01/22",
+    "dueAt": "1405/01/23",
+    "endAt": "1405/01/23",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 3,
+    "actualHours": 3,
+    "storyPoint": null,
+    "goal": "-",
+    "label": null
+  },
+  {
+    "project": "User & Order domain\ud83d\uded2",
+    "task": "\u067e\u0631\u0648\u062f\u0627\u06a9\u062a \u0634\u0648 (\u0622\u067e\u062f\u06cc\u062a \u0648 \u0631\u0641\u0639 \u06a9\u0627\u0646\u0641\u0644\u06cc\u06a9\u062a\u060c \u0631\u06cc\u0641\u06a9\u062a\u0648\u0631 \u06a9\u0627\u0645\u067e\u0648\u0646\u0646\u062a \u0647\u0627 \u0648 \u062a\u0633\u062a)",
+    "assignee": "\u0645\u062d\u0645\u062f\u06a9\u0631\u06cc\u0645\u062f\u0627\u062f\u06cc",
+    "responsibility": "\u0647\u0645\u0647(\u067e\u06cc\u0634 \u0641\u0631\u0636)",
+    "team": "\u062a\u06cc\u0645 \u0641\u0631\u0627\u0646\u062a",
+    "createdAt": "1405/01/23",
+    "startAt": "1405/01/23",
+    "dueAt": "1405/01/23",
+    "endAt": "1405/01/23",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 25,
+    "actualHours": 25,
+    "storyPoint": null,
+    "goal": "-",
+    "label": null
+  },
+  {
+    "project": "User & Order domain\ud83d\uded2",
+    "task": "\u067e\u06cc\u0634 \u0633\u0641\u0627\u0631\u0634 \u0628\u0631\u0627\u06cc \u0633\u0641\u0627\u0631\u0634 \u062a\u0644\u0641\u0646\u06cc",
+    "assignee": "\u0627\u0645\u06cc\u0631\u0631\u0636\u0627 \u0642\u0627\u0633\u0645\u06cc",
+    "responsibility": "\u0647\u0645\u0647(\u067e\u06cc\u0634 \u0641\u0631\u0636)",
+    "team": "\u062a\u06cc\u0645 \u0641\u0631\u0627\u0646\u062a",
+    "createdAt": "1405/01/23",
+    "startAt": "1405/01/16",
+    "dueAt": "1405/01/23",
+    "endAt": "1405/01/23",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 4,
+    "actualHours": 4,
+    "storyPoint": null,
+    "goal": "-",
+    "label": null
+  },
+  {
+    "project": "Logistic",
+    "task": "\u0645\u0631\u062c \u0631\u06cc\u06a9\u0648\u0639\u0633\u062a \u0633\u0631\u0648\u06cc\u0633 \u067e\u0627\u0631\u0627\u0645\u062a\u0631 \u0647\u0627\u06cc \u0627\u0631\u062c\u0627\u0639 \u0628\u0631\u0627\u06cc \u0634\u0647\u0631 \u0647\u0627\u06cc \u0645\u062e\u062a\u0644\u0641",
+    "assignee": "\u0627\u0645\u06cc\u0631\u0631\u0636\u0627 \u0642\u0627\u0633\u0645\u06cc",
+    "responsibility": "FE",
+    "team": "\u062a\u06cc\u0645 \u0641\u0631\u0627\u0646\u062a",
+    "createdAt": "1405/01/23",
+    "startAt": "1405/01/16",
+    "dueAt": "1405/01/23",
+    "endAt": "1405/01/23",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 1,
+    "actualHours": 1,
+    "storyPoint": null,
+    "goal": "-",
+    "label": null
+  },
+  {
+    "project": "Logistic",
+    "task": "\u0628\u0647\u0628\u0648\u062f \u0633\u0631\u0639\u062a \u0628\u062e\u0634 \u0644\u06cc\u0633\u062a \u067e\u06cc\u06a9 \u0647\u0627 \u062f\u0631 \u0627\u0631\u062c\u0627\u0639 \u062f\u0633\u062a\u06cc",
+    "assignee": "\u0627\u0645\u06cc\u0631\u0631\u0636\u0627 \u0642\u0627\u0633\u0645\u06cc",
+    "responsibility": "FE",
+    "team": "\u062a\u06cc\u0645 \u0641\u0631\u0627\u0646\u062a",
+    "createdAt": "1405/01/23",
+    "startAt": "1405/01/16",
+    "dueAt": "1405/01/22",
+    "endAt": "1405/01/23",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 2,
+    "actualHours": 2,
+    "storyPoint": null,
+    "goal": "-",
+    "label": null
+  },
+  {
+    "project": "Logistic",
+    "task": "\u06a9\u0627\u0645\u067e\u0648\u0646\u0646\u062a \u06a9\u0631\u062f\u0646 \u0645\u0627\u0631\u06a9\u0631 \u0647\u0627\u06cc \u0631\u0648\u06cc \u0646\u0642\u0634\u0647",
+    "assignee": "\u0627\u0645\u06cc\u0631\u0631\u0636\u0627 \u0642\u0627\u0633\u0645\u06cc",
+    "responsibility": "FE",
+    "team": "\u062a\u06cc\u0645 \u0641\u0631\u0627\u0646\u062a",
+    "createdAt": "1405/01/23",
+    "startAt": "1405/01/16",
+    "dueAt": "1405/01/22",
+    "endAt": "1405/01/23",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 4,
+    "actualHours": 4,
+    "storyPoint": null,
+    "goal": "-",
+    "label": null
+  },
+  {
+    "project": "Logistic",
+    "task": "\u067e\u06cc\u0627\u062f\u0647 \u0633\u0627\u0632\u06cc \u06a9\u0644\u0627\u0633\u062a\u0631 \u062c\u062f\u06cc\u062f \u067e\u06cc\u06a9 \u0647\u0627",
+    "assignee": "\u0627\u0645\u06cc\u0631\u0631\u0636\u0627 \u0642\u0627\u0633\u0645\u06cc",
+    "responsibility": "FE",
+    "team": "\u062a\u06cc\u0645 \u0641\u0631\u0627\u0646\u062a",
+    "createdAt": "1405/01/23",
+    "startAt": "1405/01/16",
+    "dueAt": "1405/01/22",
+    "endAt": "1405/01/23",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 3,
+    "actualHours": 3,
+    "storyPoint": null,
+    "goal": "-",
+    "label": null
+  },
+  {
+    "project": "Logistic",
+    "task": "\u062a\u063a\u06cc\u06cc\u0631 \u062f\u0631 \u0628\u062e\u0634 vendor orders",
+    "assignee": "\u0627\u0645\u06cc\u0631\u0631\u0636\u0627 \u0642\u0627\u0633\u0645\u06cc",
+    "responsibility": "FE",
+    "team": "\u062a\u06cc\u0645 \u0641\u0631\u0627\u0646\u062a",
+    "createdAt": "1405/01/23",
+    "startAt": "1405/01/16",
+    "dueAt": "1405/01/22",
+    "endAt": "1405/01/23",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 6,
+    "actualHours": 6,
+    "storyPoint": null,
+    "goal": "-",
+    "label": null
+  },
+  {
+    "project": "Logistic",
+    "task": "\u0646\u0645\u0627\u06cc\u0634 \u0633\u0641\u0631 \u0647\u0627\u06cc \u0627\u06a9\u062a\u06cc\u0648 \u067e\u06cc\u06a9",
+    "assignee": "\u0627\u0645\u06cc\u0631\u0631\u0636\u0627 \u0642\u0627\u0633\u0645\u06cc",
+    "responsibility": "FE",
+    "team": "\u062a\u06cc\u0645 \u0641\u0631\u0627\u0646\u062a",
+    "createdAt": "1405/01/23",
+    "startAt": "1405/01/16",
+    "dueAt": "1405/01/22",
+    "endAt": "1405/01/23",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 5,
+    "actualHours": 5,
+    "storyPoint": null,
+    "goal": "-",
+    "label": null
+  },
+  {
+    "project": "Logistic",
+    "task": "\u06a9\u062f \u0631\u06cc\u0641\u06a9\u062a\u0648\u0631 \u0627\u0631\u062c\u0627\u0639 \u062f\u0633\u062a\u06cc",
+    "assignee": "\u0627\u0645\u06cc\u0631\u0631\u0636\u0627 \u0642\u0627\u0633\u0645\u06cc",
+    "responsibility": "FE",
+    "team": "\u062a\u06cc\u0645 \u0641\u0631\u0627\u0646\u062a",
+    "createdAt": "1405/01/23",
+    "startAt": "1405/01/16",
+    "dueAt": "1405/01/22",
+    "endAt": "1405/01/23",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 26,
+    "actualHours": 26,
+    "storyPoint": null,
+    "goal": "-",
+    "label": null
+  },
+  {
+    "project": "Logistic",
+    "task": "\u0631\u0648\u062a \u0645\u062c\u0645\u0648\u0639\u0647 \u062a\u0627 \u0645\u0642\u0635\u062f \u0633\u0645\u062a \u0641\u0631\u0627\u0646\u062a",
+    "assignee": "\u0627\u0645\u06cc\u0631\u0631\u0636\u0627 \u0642\u0627\u0633\u0645\u06cc",
+    "responsibility": "FE",
+    "team": "\u062a\u06cc\u0645 \u0641\u0631\u0627\u0646\u062a",
+    "createdAt": "1405/01/23",
+    "startAt": "1405/01/16",
+    "dueAt": "1405/01/22",
+    "endAt": "1405/01/23",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 3,
+    "actualHours": 3,
+    "storyPoint": null,
+    "goal": "-",
+    "label": null
+  },
+  {
+    "project": "Logistic",
+    "task": "\u062a\u063a\u06cc\u06cc\u0631\u0627\u062a \u0627\u0633\u0627\u0633\u06cc \u0627\u0631\u062c\u0627\u0639 \u062f\u0633\u062a\u06cc",
+    "assignee": "\u0627\u0645\u06cc\u0631\u0631\u0636\u0627 \u0642\u0627\u0633\u0645\u06cc",
+    "responsibility": "BE",
+    "team": "\u062a\u06cc\u0645 \u0641\u0631\u0627\u0646\u062a",
+    "createdAt": "1405/01/23",
+    "startAt": "1405/01/16",
+    "dueAt": "1405/01/22",
+    "endAt": "1405/01/23",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": null,
+    "actualHours": 4,
+    "storyPoint": null,
+    "goal": "-",
+    "label": null
+  },
+  {
+    "project": "Logistic",
+    "task": "\u0635\u062d\u0628\u062a \u0628\u0627 \u062a\u06cc\u0645 \u067e\u0634\u062a\u06cc\u0628\u0627\u0646\u06cc \u0645\u0627\u06cc\u06a9\u062a \u062c\u0647\u062a \u0627\u0646\u062a\u0634\u0627\u0631 \u0627\u067e\u0644\u06cc\u06a9\u06cc\u0634\u0646 \u0633\u0641\u06cc\u0631\u0627\u0646",
+    "assignee": "\u0635\u0627\u0644\u062d \u0631\u0636\u0627\u064a\u06cc",
+    "responsibility": "BE",
+    "team": "\u062a\u06cc\u0645 \u0641\u0644\u0627\u062a\u0631",
+    "createdAt": "1405/01/22",
+    "startAt": "1405/01/22",
+    "dueAt": "1405/01/22",
+    "endAt": "1405/01/23",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 3,
+    "actualHours": 3,
+    "storyPoint": null,
+    "goal": "-",
+    "label": "Documentation"
+  },
+  {
+    "project": "Dev-Ops",
+    "task": "add async node for mongodb replicaset on local server",
+    "assignee": "\u0622\u0631\u0645\u06cc\u0646 \u0637\u0627\u0647\u0631\u06cc",
+    "responsibility": "\u0647\u0645\u0647(\u067e\u06cc\u0634 \u0641\u0631\u0636)",
+    "team": "devOps",
+    "createdAt": "1405/01/22",
+    "startAt": "1405/01/22",
+    "dueAt": "1405/01/22",
+    "endAt": "1405/01/22",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 4,
+    "actualHours": 4,
+    "storyPoint": null,
+    "goal": "-",
+    "label": null
+  },
+  {
+    "project": "User & Order domain\ud83d\uded2",
+    "task": "\u062a\u0633\u062a",
+    "assignee": "\u0645\u062a\u06cc\u0646 \u0631\u0645\u0636\u0627\u0646\u06cc \u06a9\u0631\u06cc\u0645",
+    "responsibility": "\u0647\u0645\u0647(\u067e\u06cc\u0634 \u0641\u0631\u0636)",
+    "team": "\u062a\u06cc\u0645 \u0641\u0644\u0627\u062a\u0631",
+    "createdAt": "1405/01/22",
+    "startAt": "1405/01/22",
+    "dueAt": "1405/01/22",
+    "endAt": "1405/01/22",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 9,
+    "actualHours": 9,
+    "storyPoint": null,
+    "goal": "-",
+    "label": "test"
+  },
+  {
+    "project": "AI eng",
+    "task": "Reactivating automations in n8n",
+    "assignee": "\u0645\u062d\u0645\u062f \u0645\u0647\u062f\u06cc \u0632\u0627\u062f\u0647",
+    "responsibility": "\u0647\u0645\u0647(\u067e\u06cc\u0634 \u0641\u0631\u0636)",
+    "team": "\u062a\u06cc\u0645 \u0628\u06a9 \u0627\u0646\u062f",
+    "createdAt": "1405/01/22",
+    "startAt": "1405/01/22",
+    "dueAt": "1405/01/22",
+    "endAt": "1405/01/22",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 1,
+    "actualHours": 1,
+    "storyPoint": null,
+    "goal": "-",
+    "label": null
+  },
+  {
+    "project": "Logistic",
+    "task": "\u062a\u063a\u06cc\u06cc\u0631 \u0627\u0633\u06a9\u0631\u06cc\u0646 \u0634\u0627\u062a \u0647\u0627\u06cc \u0645\u0627\u06cc\u06a9\u062a \u0648 \u06a9\u0627\u0641\u0647 \u0628\u0627\u0632\u0627\u0631 ( \u062f\u0631 \u0627\u0646\u062a\u0638\u0627\u0631 \u062f\u0631\u06cc\u0627\u0641\u062a \u0627\u0632 \u062a\u06cc\u0645 \u062f\u06cc\u0632\u0627\u06cc\u0646)",
+    "assignee": "\u0635\u0627\u0644\u062d \u0631\u0636\u0627\u064a\u06cc",
+    "responsibility": "BE",
+    "team": "\u062a\u06cc\u0645 \u0641\u0644\u0627\u062a\u0631",
+    "createdAt": "1405/01/22",
+    "startAt": "1405/01/22",
+    "dueAt": "1405/01/22",
+    "endAt": "1405/01/22",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 2,
+    "actualHours": 2,
+    "storyPoint": null,
+    "goal": "-",
+    "label": "Improvement"
+  },
+  {
+    "project": "Logistic",
+    "task": "\u0627\u067e\u062f\u06cc\u062a \u0645\u062c\u062f\u062f \u0627\u067e\u0644\u06cc\u06a9\u06cc\u0634\u0646 \u0633\u0641\u06cc\u0631\u0627\u0646\u060c \u062a\u0627\u06cc\u06cc\u062f \u0628\u0627\u0632\u0627\u0631\u060c \u062a\u062d\u0648\u06cc\u0644 \u0644\u06cc\u0646\u06a9 \u0628\u0647 \u0644\u062c\u0633\u062a\u06cc\u06a9",
+    "assignee": "\u0635\u0627\u0644\u062d \u0631\u0636\u0627\u064a\u06cc",
+    "responsibility": "BE",
+    "team": "\u062a\u06cc\u0645 \u0641\u0644\u0627\u062a\u0631",
+    "createdAt": "1405/01/22",
+    "startAt": "1405/01/22",
+    "dueAt": "1405/01/22",
+    "endAt": "1405/01/22",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 1,
+    "actualHours": 1,
+    "storyPoint": null,
+    "goal": "-",
+    "label": "Documentation"
+  },
+  {
+    "project": "Logistic",
+    "task": "\u062f\u0631\u062e\u0648\u0627\u0633\u062a \u0628\u0631\u0631\u0633\u06cc \u0645\u062c\u062f\u062f \u0645\u0627\u06cc\u06a9\u062a \u0627\u0632 \u0627\u067e\u0644\u06cc\u06a9\u06cc\u0634\u0646 \u0633\u0641\u06cc\u0631\u0627\u0646 ( \u0631\u062f \u0634\u062f \u0628\u062e\u0627\u0637\u0631 \u0646\u062f\u0627\u062f\u0646 \u06cc\u0648\u0632\u0631 \u067e\u0633\u0648\u0631\u062f)",
+    "assignee": "\u0635\u0627\u0644\u062d \u0631\u0636\u0627\u064a\u06cc",
+    "responsibility": "BE",
+    "team": "\u062a\u06cc\u0645 \u0641\u0644\u0627\u062a\u0631",
+    "createdAt": "1405/01/22",
+    "startAt": "1405/01/22",
+    "dueAt": "1405/01/22",
+    "endAt": "1405/01/22",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 1,
+    "actualHours": 1,
+    "storyPoint": null,
+    "goal": "-",
+    "label": null
+  },
+  {
+    "project": "Logistic",
+    "task": "\u062d\u0644 \u0645\u0634\u06a9\u0644 \u062a\u06cc\u06a9\u062a \u0645\u0627\u0644\u06cc",
+    "assignee": "\u0635\u0627\u0644\u062d \u0631\u0636\u0627\u064a\u06cc",
+    "responsibility": "BE",
+    "team": "\u062a\u06cc\u0645 \u0641\u0644\u0627\u062a\u0631",
+    "createdAt": "1405/01/22",
+    "startAt": "1405/01/22",
+    "dueAt": "1405/01/22",
+    "endAt": "1405/01/22",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 1,
+    "actualHours": 1,
+    "storyPoint": null,
+    "goal": "-",
+    "label": "Bug"
+  },
+  {
+    "project": "AI eng",
+    "task": "describe mauticflow database (marketing)",
+    "assignee": "\u0645\u062d\u0645\u062f \u0645\u0647\u062f\u06cc \u0632\u0627\u062f\u0647",
+    "responsibility": "\u0647\u0645\u0647(\u067e\u06cc\u0634 \u0641\u0631\u0636)",
+    "team": "\u062a\u06cc\u0645 \u0628\u06a9 \u0627\u0646\u062f",
+    "createdAt": "1405/01/19",
+    "startAt": "1405/01/19",
+    "dueAt": "1405/01/19",
+    "endAt": "1405/01/22",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 1,
+    "actualHours": 1,
+    "storyPoint": null,
+    "goal": "-",
+    "label": null
+  },
+  {
+    "project": "AI eng",
+    "task": "merge request",
+    "assignee": "\u0645\u062d\u0645\u062f \u062d\u0627\u06a9\u0645\u06cc",
+    "responsibility": "\u0647\u0645\u0647(\u067e\u06cc\u0634 \u0641\u0631\u0636)",
+    "team": "\u062a\u06cc\u0645 \u0628\u06a9 \u0627\u0646\u062f",
+    "createdAt": "1405/01/19",
+    "startAt": "1405/01/19",
+    "dueAt": "1405/01/19",
+    "endAt": "1405/01/19",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 0.5,
+    "actualHours": 0.5,
+    "storyPoint": null,
+    "goal": "-",
+    "label": null
+  },
+  {
+    "project": "AI eng",
+    "task": "RFM optimization research",
+    "assignee": "\u0645\u062d\u0645\u062f \u0645\u0647\u062f\u06cc \u0632\u0627\u062f\u0647",
+    "responsibility": "\u0647\u0645\u0647(\u067e\u06cc\u0634 \u0641\u0631\u0636)",
+    "team": "\u062a\u06cc\u0645 \u0628\u06a9 \u0627\u0646\u062f",
+    "createdAt": "1405/01/19",
+    "startAt": "1405/01/19",
+    "dueAt": "1405/01/19",
+    "endAt": "1405/01/22",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 3,
+    "actualHours": 4,
+    "storyPoint": null,
+    "goal": "-",
+    "label": null
+  },
+  {
+    "project": "Logistic",
+    "task": "\u062a\u063a\u06cc\u06cc\u0631 \u062f\u06cc\u0632\u0627\u06cc\u0646 \u0634\u0647\u0631 \u062f\u0631 \u0642\u0633\u0645\u062a \u062a\u0646\u0638\u06cc\u0645\u0627\u062a \u0627\u0631\u062c\u0627\u0639 \u0627\u062a\u0648\u0645\u0627\u062a\u06cc\u06a9 \u0627\u062f\u0645\u06cc\u0646 \u062f\u0631 \u0641\u0631\u0627\u0646\u062a \u0632\u0648\u062f\u06a9\u0633 \u0645\u067e",
+    "assignee": "\u0635\u0627\u0644\u062d \u0631\u0636\u0627\u064a\u06cc",
+    "responsibility": "BE",
+    "team": "\u062a\u06cc\u0645 \u0641\u0644\u0627\u062a\u0631",
+    "createdAt": "1405/01/19",
+    "startAt": "1405/01/19",
+    "dueAt": "1405/01/19",
+    "endAt": "1405/01/19",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 3,
+    "actualHours": 3,
+    "storyPoint": null,
+    "goal": "-",
+    "label": "New Feature"
+  },
+  {
+    "project": "AI eng",
+    "task": "make a simple dashboard",
+    "assignee": "\u0645\u062d\u0645\u062f \u062d\u0627\u06a9\u0645\u06cc",
+    "responsibility": "\u0647\u0645\u0647(\u067e\u06cc\u0634 \u0641\u0631\u0636)",
+    "team": "\u062a\u06cc\u0645 \u0628\u06a9 \u0627\u0646\u062f",
+    "createdAt": "1405/01/19",
+    "startAt": "1405/01/19",
+    "dueAt": "1405/01/19",
+    "endAt": "1405/01/19",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 1,
+    "actualHours": 1,
+    "storyPoint": null,
+    "goal": "-",
+    "label": null
+  },
+  {
+    "project": "Logistic",
+    "task": "\u0642\u0631\u0627\u0631 \u062f\u0627\u062f\u0646 \u0627\u067e\u0644\u06cc\u06a9\u06cc\u0634\u0646 \u0633\u0641\u06cc\u0631\u0627\u0646 \u062f\u0631 \u0645\u0627\u06cc\u06a9\u062a",
+    "assignee": "\u0635\u0627\u0644\u062d \u0631\u0636\u0627\u064a\u06cc",
+    "responsibility": "BE",
+    "team": "\u062a\u06cc\u0645 \u0641\u0644\u0627\u062a\u0631",
+    "createdAt": "1405/01/19",
+    "startAt": "1405/01/19",
+    "dueAt": "1405/01/19",
+    "endAt": "1405/01/19",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 2,
+    "actualHours": 2,
+    "storyPoint": null,
+    "goal": "-",
+    "label": "Improvement"
+  },
+  {
+    "project": "Logistic",
+    "task": "\u062a\u063a\u06cc\u06cc\u0631 \u0644\u0648\u06af\u0648 \u0627\u067e\u0644\u06cc\u06a9\u06cc\u0634\u0646 \u0633\u0641\u06cc\u0631\u0627\u0646 \u062f\u0631 \u06a9\u0627\u0641\u0647 \u0628\u0627\u0632\u0627\u0631",
+    "assignee": "\u0635\u0627\u0644\u062d \u0631\u0636\u0627\u064a\u06cc",
+    "responsibility": "BE",
+    "team": "\u062a\u06cc\u0645 \u0641\u0644\u0627\u062a\u0631",
+    "createdAt": "1405/01/19",
+    "startAt": "1405/01/19",
+    "dueAt": "1405/01/19",
+    "endAt": "1405/01/19",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 1,
+    "actualHours": 1,
+    "storyPoint": null,
+    "goal": "-",
+    "label": "New Feature"
+  },
+  {
+    "project": "Logistic",
+    "task": "\u062f\u0631\u06cc\u0627\u0641\u062a \u0644\u06cc\u0646\u06a9 \u0648\u0631\u0698\u0646 \u0642\u0628\u0644\u06cc \u0627\u067e\u0644\u06cc\u06a9\u06cc\u0634\u0646 \u0648 \u062a\u062d\u0648\u06cc\u0644 \u0628\u0647 \u062a\u06cc\u0645 \u0644\u062c\u0633\u062a\u06cc\u06a9",
+    "assignee": "\u0635\u0627\u0644\u062d \u0631\u0636\u0627\u064a\u06cc",
+    "responsibility": "BE",
+    "team": "\u062a\u06cc\u0645 \u0641\u0644\u0627\u062a\u0631",
+    "createdAt": "1405/01/19",
+    "startAt": "1405/01/19",
+    "dueAt": "1405/01/19",
+    "endAt": "1405/01/19",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 2,
+    "actualHours": 2,
+    "storyPoint": null,
+    "goal": "-",
+    "label": "Improvement"
+  },
+  {
+    "project": "User & Order domain\ud83d\uded2",
+    "task": "\u062a\u0633\u062a",
+    "assignee": "\u0645\u062a\u06cc\u0646 \u0631\u0645\u0636\u0627\u0646\u06cc \u06a9\u0631\u06cc\u0645",
+    "responsibility": "\u0647\u0645\u0647(\u067e\u06cc\u0634 \u0641\u0631\u0636)",
+    "team": "\u062a\u06cc\u0645 \u0641\u0644\u0627\u062a\u0631",
+    "createdAt": "1405/01/19",
+    "startAt": "1405/01/19",
+    "dueAt": "1405/01/19",
+    "endAt": "1405/01/19",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 9,
+    "actualHours": 9,
+    "storyPoint": null,
+    "goal": "-",
+    "label": "test"
+  },
+  {
+    "project": "AI eng",
+    "task": "create pipeline in celery for score couriers data in queue",
+    "assignee": "\u0645\u062d\u0645\u062f \u062d\u0627\u06a9\u0645\u06cc",
+    "responsibility": "\u0647\u0645\u0647(\u067e\u06cc\u0634 \u0641\u0631\u0636)",
+    "team": "\u062a\u06cc\u0645 \u0628\u06a9 \u0627\u0646\u062f",
+    "createdAt": "1405/01/19",
+    "startAt": "1405/01/19",
+    "dueAt": "1405/01/19",
+    "endAt": "1405/01/19",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 6,
+    "actualHours": 6,
+    "storyPoint": null,
+    "goal": "-",
+    "label": null
+  },
+  {
+    "project": "Logistic",
+    "task": "\u0645\u0646\u0638\u0645 \u0633\u0627\u0632\u06cc \u0628\u0631\u0646\u0686 \u0647\u0627\u06cc \u0627\u067e\u0644\u06cc\u06a9\u06cc\u0634\u0646 \u0632\u0648\u062f\u06a9\u0633 \u0633\u0641\u06cc\u0631\u0627\u0646",
+    "assignee": "\u0635\u0627\u0644\u062d \u0631\u0636\u0627\u064a\u06cc",
+    "responsibility": "BE",
+    "team": "\u062a\u06cc\u0645 \u0641\u0644\u0627\u062a\u0631",
+    "createdAt": "1405/01/19",
+    "startAt": "1405/01/19",
+    "dueAt": "1405/01/19",
+    "endAt": "1405/01/19",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 3,
+    "actualHours": 3,
+    "storyPoint": null,
+    "goal": "-",
+    "label": "Improvement"
+  },
+  {
+    "project": "Logistic",
+    "task": "\u0628\u0631\u0648\u0632\u0631\u0633\u0627\u0646\u06cc \u0648\u0628\u0648\u06cc\u0648 \u062f\u0631 \u0645\u0627\u06cc\u06a9\u062a",
+    "assignee": "\u0635\u0627\u0644\u062d \u0631\u0636\u0627\u064a\u06cc",
+    "responsibility": "BE",
+    "team": "\u062a\u06cc\u0645 \u0641\u0644\u0627\u062a\u0631",
+    "createdAt": "1405/01/19",
+    "startAt": "1405/01/19",
+    "dueAt": "1405/01/19",
+    "endAt": "1405/01/19",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 1,
+    "actualHours": 1,
+    "storyPoint": null,
+    "goal": "-",
+    "label": "Improvement"
+  },
+  {
+    "project": "AI eng",
+    "task": "R&D pipeline worker -> celery",
+    "assignee": "\u0645\u062d\u0645\u062f \u062d\u0627\u06a9\u0645\u06cc",
+    "responsibility": "\u0647\u0645\u0647(\u067e\u06cc\u0634 \u0641\u0631\u0636)",
+    "team": "\u062a\u06cc\u0645 \u0628\u06a9 \u0627\u0646\u062f",
+    "createdAt": "1405/01/19",
+    "startAt": "1405/01/18",
+    "dueAt": "1405/01/18",
+    "endAt": "1405/01/18",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 1,
+    "actualHours": 1,
+    "storyPoint": null,
+    "goal": "-",
+    "label": null
+  },
+  {
+    "project": "AI eng",
+    "task": "merge osrm service with courier class code base",
+    "assignee": "\u0645\u062d\u0645\u062f \u062d\u0627\u06a9\u0645\u06cc",
+    "responsibility": "\u0647\u0645\u0647(\u067e\u06cc\u0634 \u0641\u0631\u0636)",
+    "team": "\u062a\u06cc\u0645 \u0628\u06a9 \u0627\u0646\u062f",
+    "createdAt": "1405/01/19",
+    "startAt": "1405/01/18",
+    "dueAt": "1405/01/18",
+    "endAt": "1405/01/18",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 4,
+    "actualHours": 4,
+    "storyPoint": null,
+    "goal": "-",
+    "label": null
+  },
+  {
+    "project": "User & Order domain\ud83d\uded2",
+    "task": "\u062a\u0633\u062a",
+    "assignee": "\u0645\u062a\u06cc\u0646 \u0631\u0645\u0636\u0627\u0646\u06cc \u06a9\u0631\u06cc\u0645",
+    "responsibility": "\u0647\u0645\u0647(\u067e\u06cc\u0634 \u0641\u0631\u0636)",
+    "team": "\u062a\u06cc\u0645 \u0641\u0644\u0627\u062a\u0631",
+    "createdAt": "1405/01/18",
+    "startAt": "1405/01/18",
+    "dueAt": "1405/01/18",
+    "endAt": "1405/01/18",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 8,
+    "actualHours": 8,
+    "storyPoint": null,
+    "goal": "-",
+    "label": "test"
+  },
+  {
+    "project": "Logistic",
+    "task": "\u0628\u0631\u0648\u0632\u0631\u0633\u0627\u0646\u06cc \u0627\u067e\u0644\u06cc\u06a9\u06cc\u0634\u0646 \u0632\u0648\u062f\u06a9\u0633 \u0633\u0641\u06cc\u0631\u0627\u0646 \u0648 \u0648\u0628\u0648\u06cc\u0648 \u0641\u0648\u062f",
+    "assignee": "\u0635\u0627\u0644\u062d \u0631\u0636\u0627\u064a\u06cc",
+    "responsibility": "BE",
+    "team": "\u062a\u06cc\u0645 \u0641\u0644\u0627\u062a\u0631",
+    "createdAt": "1405/01/18",
+    "startAt": "1405/01/18",
+    "dueAt": "1405/01/18",
+    "endAt": "1405/01/18",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 6,
+    "actualHours": 6,
+    "storyPoint": null,
+    "goal": "-",
+    "label": "Documentation"
+  },
+  {
+    "project": "Logistic",
+    "task": "\u0642\u0641\u0644 \u06a9\u0631\u062f\u0646 \u0628\u06a9 \u062f\u0631 \u0648\u0628\u0648\u06cc\u0648 \u0641\u0648\u062f",
+    "assignee": "\u0635\u0627\u0644\u062d \u0631\u0636\u0627\u064a\u06cc",
+    "responsibility": "BE",
+    "team": "\u062a\u06cc\u0645 \u0641\u0644\u0627\u062a\u0631",
+    "createdAt": "1405/01/18",
+    "startAt": "1405/01/18",
+    "dueAt": "1405/01/18",
+    "endAt": "1405/01/18",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 2,
+    "actualHours": 2,
+    "storyPoint": null,
+    "goal": "-",
+    "label": "New Feature"
+  },
+  {
+    "project": "Logistic",
+    "task": "\u0627\u0636\u0627\u0641\u0647 \u06a9\u0631\u062f\u0646 \u0627\u0633\u062a\u067e \u0645\u0628\u062f\u0627 \u062f\u0631 \u0635\u0641\u062d\u0647 \u062c\u0632\u06cc\u06cc\u0627\u062a \u0633\u0641\u0627\u0631\u0634",
+    "assignee": "\u0635\u0627\u0644\u062d \u0631\u0636\u0627\u064a\u06cc",
+    "responsibility": "BE",
+    "team": "\u062a\u06cc\u0645 \u0641\u0644\u0627\u062a\u0631",
+    "createdAt": "1405/01/18",
+    "startAt": "1405/01/18",
+    "dueAt": "1405/01/18",
+    "endAt": "1405/01/18",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 3,
+    "actualHours": 3,
+    "storyPoint": null,
+    "goal": "-",
+    "label": "New Feature"
+  },
+  {
+    "project": "Dev-Ops",
+    "task": "zabbix proxy name resolving issue",
+    "assignee": "\u0622\u0631\u0645\u06cc\u0646 \u0637\u0627\u0647\u0631\u06cc",
+    "responsibility": "\u0647\u0645\u0647(\u067e\u06cc\u0634 \u0641\u0631\u0636)",
+    "team": "devOps",
+    "createdAt": "1405/01/18",
+    "startAt": "1405/01/18",
+    "dueAt": "1405/01/18",
+    "endAt": "1405/01/18",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 1,
+    "actualHours": 1,
+    "storyPoint": null,
+    "goal": "-",
+    "label": null
+  },
+  {
+    "project": "Dev-Ops",
+    "task": "store-panel npm-install ci/cd issue",
+    "assignee": "\u0622\u0631\u0645\u06cc\u0646 \u0637\u0627\u0647\u0631\u06cc",
+    "responsibility": "\u0647\u0645\u0647(\u067e\u06cc\u0634 \u0641\u0631\u0636)",
+    "team": "devOps",
+    "createdAt": "1405/01/18",
+    "startAt": "1405/01/17",
+    "dueAt": "1405/01/17",
+    "endAt": "1405/01/17",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 2,
+    "actualHours": 2,
+    "storyPoint": null,
+    "goal": "-",
+    "label": null
+  },
+  {
+    "project": "Dev-Ops",
+    "task": "zoodex doctor deploy",
+    "assignee": "\u0622\u0631\u0645\u06cc\u0646 \u0637\u0627\u0647\u0631\u06cc",
+    "responsibility": "\u0647\u0645\u0647(\u067e\u06cc\u0634 \u0641\u0631\u0636)",
+    "team": "devOps",
+    "createdAt": "1405/01/18",
+    "startAt": "1405/01/17",
+    "dueAt": "1405/01/17",
+    "endAt": "1405/01/17",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 1,
+    "actualHours": 1,
+    "storyPoint": null,
+    "goal": "-",
+    "label": null
+  },
+  {
+    "project": "Logistic",
+    "task": "\u062d\u0644 \u0645\u0634\u06a9\u0644 \u0641\u0639\u0627\u0644 \u0648 \u063a\u06cc\u0631 \u0641\u0639\u0627\u0644 \u06a9\u0631\u062f\u0646 \u0646\u0648\u062a\u06cc\u0641 \u0627\u067e\u0631\u0627\u062a\u0648\u0631 \u0647\u0627",
+    "assignee": "\u0627\u0645\u06cc\u0631\u0631\u0636\u0627 \u062c\u0648\u0627\u0646\u0645\u0631\u062f\u06cc",
+    "responsibility": "BE",
+    "team": "\u062a\u06cc\u0645 \u0628\u06a9 \u0627\u0646\u062f",
+    "createdAt": "1405/01/18",
+    "startAt": "1405/01/18",
+    "dueAt": "1405/01/18",
+    "endAt": "1405/01/18",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 2,
+    "actualHours": 2,
+    "storyPoint": null,
+    "goal": "-",
+    "label": null
+  },
+  {
+    "project": "User & Order domain\ud83d\uded2",
+    "task": "\u067e\u0631\u0648\u062f\u0627\u06a9\u062a \u0634\u0648\u060c ( \u0644\u0627\u06cc\u06a9 \u0648 \u0642\u0633\u0645\u062a \u0647\u0627\u06cc \u0628\u0627\u0642\u06cc \u0645\u0627\u0646\u062f\u0647)",
+    "assignee": "\u0645\u062d\u0645\u062f\u06a9\u0631\u06cc\u0645\u062f\u0627\u062f\u06cc",
+    "responsibility": "\u0647\u0645\u0647(\u067e\u06cc\u0634 \u0641\u0631\u0636)",
+    "team": "\u062a\u06cc\u0645 \u0641\u0631\u0627\u0646\u062a",
+    "createdAt": "1405/01/18",
+    "startAt": "1405/01/18",
+    "dueAt": "1405/01/19",
+    "endAt": "1405/01/23",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 9,
+    "actualHours": 9,
+    "storyPoint": null,
+    "goal": "-",
+    "label": null
+  },
+  {
+    "project": "AI eng",
+    "task": "merge requests",
+    "assignee": "\u0645\u062d\u0645\u062f \u062d\u0627\u06a9\u0645\u06cc",
+    "responsibility": "\u0647\u0645\u0647(\u067e\u06cc\u0634 \u0641\u0631\u0636)",
+    "team": "\u062a\u06cc\u0645 \u0628\u06a9 \u0627\u0646\u062f",
+    "createdAt": "1405/01/18",
+    "startAt": "1405/01/18",
+    "dueAt": "1405/01/18",
+    "endAt": "1405/01/18",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 0.5,
+    "actualHours": 0.5,
+    "storyPoint": null,
+    "goal": "-",
+    "label": null
+  },
+  {
+    "project": "User & Order domain\ud83d\uded2",
+    "task": "\u062a\u0633\u062a",
+    "assignee": "\u0645\u062a\u06cc\u0646 \u0631\u0645\u0636\u0627\u0646\u06cc \u06a9\u0631\u06cc\u0645",
+    "responsibility": "\u0647\u0645\u0647(\u067e\u06cc\u0634 \u0641\u0631\u0636)",
+    "team": "\u062a\u06cc\u0645 \u0641\u0644\u0627\u062a\u0631",
+    "createdAt": "1405/01/17",
+    "startAt": "1405/01/17",
+    "dueAt": "1405/01/17",
+    "endAt": "1405/01/17",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 8,
+    "actualHours": 8,
+    "storyPoint": null,
+    "goal": "-",
+    "label": "test"
+  },
+  {
+    "project": "Logistic",
+    "task": "\u062d\u0644 \u0645\u0634\u06a9\u0644 \u062f\u0633\u062a\u0631\u0633\u06cc \u0634\u06cc\u0641\u062a \u067e\u06cc\u06a9 \u0647\u0627 (\u062f\u06a9\u0645\u0647 \u06cc \u0639\u0645\u0644\u06cc\u0627\u062a) \u0648 \u062f\u0627\u062f\u0646 \u062f\u0633\u062a\u0631\u0633\u06cc \u0628\u0647 \u0686\u0646\u062f \u0646\u0641\u0631",
+    "assignee": "\u0627\u0645\u06cc\u0631\u0631\u0636\u0627 \u062c\u0648\u0627\u0646\u0645\u0631\u062f\u06cc",
+    "responsibility": "BE",
+    "team": "\u062a\u06cc\u0645 \u0628\u06a9 \u0627\u0646\u062f",
+    "createdAt": "1405/01/17",
+    "startAt": "1405/01/17",
+    "dueAt": "1405/01/17",
+    "endAt": "1405/01/18",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 0.3,
+    "actualHours": 0.3,
+    "storyPoint": null,
+    "goal": "-",
+    "label": null
+  },
+  {
+    "project": "Logistic",
+    "task": "\u0627\u0631\u062c\u0627\u0639 \u0628\u062f \u0627\u067e\u0631\u0627\u062a\u0648\u0631 \u0647\u0627\u06cc \u0644\u062c\u0633\u062a\u06cc\u06a9",
+    "assignee": "\u0627\u0645\u06cc\u0631\u0631\u0636\u0627 \u062c\u0648\u0627\u0646\u0645\u0631\u062f\u06cc",
+    "responsibility": "BE",
+    "team": "\u062a\u06cc\u0645 \u0628\u06a9 \u0627\u0646\u062f",
+    "createdAt": "1405/01/17",
+    "startAt": "1405/01/17",
+    "dueAt": "1405/01/17",
+    "endAt": "1405/01/18",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 20,
+    "actualHours": 20,
+    "storyPoint": null,
+    "goal": "-",
+    "label": null
+  },
+  {
+    "project": "AI eng",
+    "task": "add ww code status in redis",
+    "assignee": "\u0645\u062d\u0645\u062f \u0645\u0647\u062f\u06cc \u0632\u0627\u062f\u0647",
+    "responsibility": "\u0647\u0645\u0647(\u067e\u06cc\u0634 \u0641\u0631\u0636)",
+    "team": "\u062a\u06cc\u0645 \u0628\u06a9 \u0627\u0646\u062f",
+    "createdAt": "1405/01/17",
+    "startAt": "1405/01/17",
+    "dueAt": "1405/01/18",
+    "endAt": "1405/01/18",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 2,
+    "actualHours": 4,
+    "storyPoint": null,
+    "goal": "-",
+    "label": null
+  },
+  {
+    "project": "AI eng",
+    "task": "reduce ww response time,ww code courier route",
+    "assignee": "\u0645\u062d\u0645\u062f \u0645\u0647\u062f\u06cc \u0632\u0627\u062f\u0647",
+    "responsibility": "\u0647\u0645\u0647(\u067e\u06cc\u0634 \u0641\u0631\u0636)",
+    "team": "\u062a\u06cc\u0645 \u0628\u06a9 \u0627\u0646\u062f",
+    "createdAt": "1405/01/17",
+    "startAt": "1405/01/17",
+    "dueAt": "1405/01/17",
+    "endAt": "1405/01/17",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 6,
+    "actualHours": 6,
+    "storyPoint": null,
+    "goal": "-",
+    "label": null
+  },
+  {
+    "project": "Logistic",
+    "task": "\u067e\u06cc\u06a9 \u0641\u0642\u0637 \u0628\u062a\u0648\u0646\u0647 \u06f3\u06f0 \u062f\u0642\u06cc\u0642\u0647 \u0642\u0628\u0644 \u0627\u0632 \u0634\u0631\u0648\u0639 \u0648 \u062a\u0627 \u067e\u0627\u06cc\u0627\u0646 \u0634\u06cc\u0641\u062a \u062d\u0636\u0648\u0631\u06cc\u0647 \u062e\u0648\u062f\u0634 \u0631\u0648 \u062f\u0631 \u0627\u067e \u062b\u0628\u062a \u06a9\u0646\u0647 \u0648\u06af\u0631\u0646\u0647 \u0627\u0631\u0648\u0631 \u062f\u0631\u06cc\u0627\u0641\u062a \u0645\u06cc\u06a9\u0646\u0647",
+    "assignee": "\u0627\u0645\u06cc\u0631\u0631\u0636\u0627 \u062c\u0648\u0627\u0646\u0645\u0631\u062f\u06cc",
+    "responsibility": "BE",
+    "team": "\u062a\u06cc\u0645 \u0628\u06a9 \u0627\u0646\u062f",
+    "createdAt": "1405/01/17",
+    "startAt": "1405/01/17",
+    "dueAt": "1405/01/17",
+    "endAt": "1405/01/18",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 3,
+    "actualHours": 3,
+    "storyPoint": null,
+    "goal": "-",
+    "label": null
+  },
+  {
+    "project": "AI eng",
+    "task": "add osrm service for compare routes and detect fraud, multi app or normal",
+    "assignee": "\u0645\u062d\u0645\u062f \u062d\u0627\u06a9\u0645\u06cc",
+    "responsibility": "\u0647\u0645\u0647(\u067e\u06cc\u0634 \u0641\u0631\u0636)",
+    "team": "\u062a\u06cc\u0645 \u0628\u06a9 \u0627\u0646\u062f",
+    "createdAt": "1405/01/17",
+    "startAt": "1405/01/17",
+    "dueAt": "1405/01/17",
+    "endAt": "1405/01/17",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 5,
+    "actualHours": 5,
+    "storyPoint": null,
+    "goal": "-",
+    "label": null
+  },
+  {
+    "project": "AI eng",
+    "task": "add all orders time lines for calculation",
+    "assignee": "\u0645\u062d\u0645\u062f \u062d\u0627\u06a9\u0645\u06cc",
+    "responsibility": "\u0647\u0645\u0647(\u067e\u06cc\u0634 \u0641\u0631\u0636)",
+    "team": "\u062a\u06cc\u0645 \u0628\u06a9 \u0627\u0646\u062f",
+    "createdAt": "1405/01/17",
+    "startAt": "1405/01/17",
+    "dueAt": "1405/01/17",
+    "endAt": "1405/01/17",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 1.5,
+    "actualHours": 1.5,
+    "storyPoint": null,
+    "goal": "-",
+    "label": null
+  },
+  {
+    "project": "User & Order domain\ud83d\uded2",
+    "task": "\u0637\u0631\u0627\u062d\u06cc \u0635\u0641\u062d\u0647 \u0641\u0648\u0631\u0633 \u0622\u067e\u062f\u06cc\u062a \u0628\u0631\u0627\u06cc \u0632\u0648\u062f\u06a9\u0633",
+    "assignee": "\u0641\u0631\u06cc\u0628\u0627 \u0642\u0637\u0628\u06cc",
+    "responsibility": "\u0647\u0645\u0647(\u067e\u06cc\u0634 \u0641\u0631\u0636)",
+    "team": "\u062a\u06cc\u0645 UI-UX",
+    "createdAt": "1405/01/17",
+    "startAt": "1405/01/17",
+    "dueAt": "1405/01/17",
+    "endAt": "1405/01/17",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 2,
+    "actualHours": 2,
+    "storyPoint": null,
+    "goal": "-",
+    "label": null
+  },
+  {
+    "project": "User & Order domain\ud83d\uded2",
+    "task": "\u0628\u0627\u0632 \u0637\u0631\u0627\u062d\u06cc \u0627\u0633\u0646\u06a9 \u0628\u0627\u0631 \u0622\u067e\u062f\u06cc\u062a \u0632\u0648\u062f\u06a9\u0633",
+    "assignee": "\u0641\u0631\u06cc\u0628\u0627 \u0642\u0637\u0628\u06cc",
+    "responsibility": "\u0647\u0645\u0647(\u067e\u06cc\u0634 \u0641\u0631\u0636)",
+    "team": "\u062a\u06cc\u0645 UI-UX",
+    "createdAt": "1405/01/17",
+    "startAt": "1405/01/17",
+    "dueAt": "1405/01/17",
+    "endAt": "1405/01/17",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 1,
+    "actualHours": 1,
+    "storyPoint": null,
+    "goal": "-",
+    "label": null
+  },
+  {
+    "project": "User & Order domain\ud83d\uded2",
+    "task": "\u062f\u0631\u0633\u062a \u06a9\u0631\u062f\u0646 \u0633\u0631\u0686 \u0635\u0641\u062d\u0647 \u062f\u0631\u062e\u0648\u0627\u0633\u062a \u0648\u062c\u0647\u200c\u0647\u0627 \u0648 \u0632\u062f\u0646 \u0648\u0628 \u0633\u0631\u0648\u06cc\u0633 \u067e\u06cc\u0634\u06cc\u0646\u0647 \u06a9\u0627\u0631\u0628\u0631",
+    "assignee": "\u0627\u0645\u06cc\u0631\u0645\u062d\u0645\u062f \u0622\u0633\u062a\u0627",
+    "responsibility": "\u0647\u0645\u0647(\u067e\u06cc\u0634 \u0641\u0631\u0636)",
+    "team": "\u062a\u06cc\u0645 \u0628\u06a9 \u0627\u0646\u062f",
+    "createdAt": "1405/01/17",
+    "startAt": "1405/01/17",
+    "dueAt": "1405/01/17",
+    "endAt": "1405/01/17",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 3,
+    "actualHours": 2.5,
+    "storyPoint": null,
+    "goal": "-",
+    "label": null
+  },
+  {
+    "project": "AI eng",
+    "task": "review merge request",
+    "assignee": "\u0645\u062d\u0645\u062f \u062d\u0627\u06a9\u0645\u06cc",
+    "responsibility": "\u0647\u0645\u0647(\u067e\u06cc\u0634 \u0641\u0631\u0636)",
+    "team": "\u062a\u06cc\u0645 \u0628\u06a9 \u0627\u0646\u062f",
+    "createdAt": "1405/01/17",
+    "startAt": "1405/01/17",
+    "dueAt": "1405/01/17",
+    "endAt": "1405/01/17",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 0.5,
+    "actualHours": 0.5,
+    "storyPoint": null,
+    "goal": "-",
+    "label": null
+  },
+  {
+    "project": "Dev-Ops",
+    "task": "zoodex phone book deploy",
+    "assignee": "\u0622\u0631\u0645\u06cc\u0646 \u0637\u0627\u0647\u0631\u06cc",
+    "responsibility": "\u0647\u0645\u0647(\u067e\u06cc\u0634 \u0641\u0631\u0636)",
+    "team": "devOps",
+    "createdAt": "1405/01/16",
+    "startAt": "1405/01/16",
+    "dueAt": "1405/01/16",
+    "endAt": "1405/01/16",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 1,
+    "actualHours": 1,
+    "storyPoint": null,
+    "goal": "-",
+    "label": null
+  },
+  {
+    "project": "User & Order domain\ud83d\uded2",
+    "task": "\u062a\u0633\u062a",
+    "assignee": "\u0645\u062a\u06cc\u0646 \u0631\u0645\u0636\u0627\u0646\u06cc \u06a9\u0631\u06cc\u0645",
+    "responsibility": "\u0647\u0645\u0647(\u067e\u06cc\u0634 \u0641\u0631\u0636)",
+    "team": "\u062a\u06cc\u0645 \u0641\u0644\u0627\u062a\u0631",
+    "createdAt": "1405/01/16",
+    "startAt": "1405/01/16",
+    "dueAt": "1405/01/16",
+    "endAt": "1405/01/16",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 8,
+    "actualHours": 8,
+    "storyPoint": null,
+    "goal": "-",
+    "label": "test"
+  },
+  {
+    "project": "AI eng",
+    "task": "tune formula",
+    "assignee": "\u0645\u062d\u0645\u062f \u062d\u0627\u06a9\u0645\u06cc",
+    "responsibility": "\u0647\u0645\u0647(\u067e\u06cc\u0634 \u0641\u0631\u0636)",
+    "team": "\u062a\u06cc\u0645 \u0628\u06a9 \u0627\u0646\u062f",
+    "createdAt": "1405/01/16",
+    "startAt": "1405/01/16",
+    "dueAt": "1405/01/16",
+    "endAt": "1405/01/16",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 1,
+    "actualHours": 1,
+    "storyPoint": null,
+    "goal": "-",
+    "label": null
+  },
+  {
+    "project": "Logistic",
+    "task": "\u062d\u0644 \u0627\u0631\u0648\u0631 \u0647\u0627 \u0648 \u0645\u0634\u06a9\u0644 \u062a\u062d\u0631\u06cc\u0645 \u0647\u0627\u06cc \u06af\u0648\u06af\u0644 \u0648 \u06af\u0631\u062f\u0644",
+    "assignee": "\u0635\u0627\u0644\u062d \u0631\u0636\u0627\u064a\u06cc",
+    "responsibility": "BE",
+    "team": "\u062a\u06cc\u0645 \u0641\u0644\u0627\u062a\u0631",
+    "createdAt": "1405/01/16",
+    "startAt": "1405/01/16",
+    "dueAt": "1405/01/16",
+    "endAt": "1405/01/18",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 8,
+    "actualHours": 8,
+    "storyPoint": null,
+    "goal": "-",
+    "label": "Improvement"
+  },
+  {
+    "project": "Store Domain \ud83c\udfea",
+    "task": "\u0637\u0631\u0627\u062d\u06cc \u0635\u0641\u062d\u0647 \u0627\u0645\u0648\u0632\u0634 \u0647\u0627",
+    "assignee": "\u067e\u0648\u06cc\u0627 \u062d\u062c\u0627\u0631",
+    "responsibility": "\u0647\u0645\u0647(\u067e\u06cc\u0634 \u0641\u0631\u0636)",
+    "team": "\u062a\u06cc\u0645 \u0641\u0631\u0627\u0646\u062a",
+    "createdAt": "1405/01/16",
+    "startAt": "1405/01/16",
+    "dueAt": "1405/01/16",
+    "endAt": "1405/01/22",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 4,
+    "actualHours": 5,
+    "storyPoint": null,
+    "goal": "-",
+    "label": null
+  },
+  {
+    "project": "AI eng",
+    "task": "add a new panel (banner hits) Grafana",
+    "assignee": "\u0645\u062d\u0645\u062f \u0645\u0647\u062f\u06cc \u0632\u0627\u062f\u0647",
+    "responsibility": "\u0647\u0645\u0647(\u067e\u06cc\u0634 \u0641\u0631\u0636)",
+    "team": "\u062a\u06cc\u0645 \u0628\u06a9 \u0627\u0646\u062f",
+    "createdAt": "1405/01/16",
+    "startAt": "1405/01/16",
+    "dueAt": "1405/01/16",
+    "endAt": "1405/01/16",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 1,
+    "actualHours": 1,
+    "storyPoint": null,
+    "goal": "-",
+    "label": null
+  },
+  {
+    "project": "Logistic",
+    "task": "\u0628\u0631\u0631\u0633\u06cc \u0646\u0647\u0627\u06cc\u06cc \u0648 \u062e\u0631\u0648\u062c\u06cc \u0648\u0631\u0698\u0646 2.0.45+76 \u0648 \u0627\u067e\u0644\u0648\u062f \u0644\u06cc\u0646\u06a9 \u062f\u0631 \u06a9\u0627\u0641\u0647 \u0628\u0627\u0632\u0627\u0631 \u0648 \u062a\u062d\u0648\u06cc\u0644 \u0644\u06cc\u0646\u06a9 \u0645\u0633\u062a\u0642\u06cc\u0645",
+    "assignee": "\u0635\u0627\u0644\u062d \u0631\u0636\u0627\u064a\u06cc",
+    "responsibility": "BE",
+    "team": "\u062a\u06cc\u0645 \u0641\u0644\u0627\u062a\u0631",
+    "createdAt": "1405/01/16",
+    "startAt": "1405/01/16",
+    "dueAt": "1405/01/16",
+    "endAt": "1405/01/16",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 2,
+    "actualHours": 2,
+    "storyPoint": null,
+    "goal": "-",
+    "label": "Documentation"
+  },
+  {
+    "project": "AI eng",
+    "task": "implement first courier score model like DoorDash and UberEats",
+    "assignee": "\u0645\u062d\u0645\u062f \u062d\u0627\u06a9\u0645\u06cc",
+    "responsibility": "\u0647\u0645\u0647(\u067e\u06cc\u0634 \u0641\u0631\u0636)",
+    "team": "\u062a\u06cc\u0645 \u0628\u06a9 \u0627\u0646\u062f",
+    "createdAt": "1405/01/16",
+    "startAt": "1405/01/16",
+    "dueAt": "1405/01/16",
+    "endAt": "1405/01/16",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 6,
+    "actualHours": 6,
+    "storyPoint": null,
+    "goal": "-",
+    "label": null
+  },
+  {
+    "project": "Logistic",
+    "task": "\u067e\u06cc\u0627\u062f\u0647 \u0633\u0627\u0632\u06cc \u0644\u06cc\u0633\u062a \u0627\u0642\u0644\u0627\u0645 \u062f\u0631 \u062a\u0645\u0627\u0645\u06cc \u0645\u0631\u0627\u062d\u0644 \u062c\u0632\u06cc\u06cc\u0627\u062a \u0633\u0641\u0627\u0631\u0634",
+    "assignee": "\u0635\u0627\u0644\u062d \u0631\u0636\u0627\u064a\u06cc",
+    "responsibility": "BE",
+    "team": "\u062a\u06cc\u0645 \u0641\u0644\u0627\u062a\u0631",
+    "createdAt": "1405/01/16",
+    "startAt": "1405/01/16",
+    "dueAt": "1405/01/16",
+    "endAt": "1405/01/16",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 4,
+    "actualHours": 4,
+    "storyPoint": null,
+    "goal": "-",
+    "label": "New Feature"
+  },
+  {
+    "project": "Store Domain \ud83c\udfea",
+    "task": "\u0637\u0631\u0627\u062d\u06cc \u0635\u0641\u062d\u0647 \u0627\u0645\u0648\u0632\u0634 \u0647\u0627",
+    "assignee": "\u062f\u06cc\u0646\u0627 \u0646\u0627\u0638\u0645\u06cc",
+    "responsibility": "\u0647\u0645\u0647(\u067e\u06cc\u0634 \u0641\u0631\u0636)",
+    "team": "\u062a\u06cc\u0645 UI-UX",
+    "createdAt": "1405/01/16",
+    "startAt": "1405/01/16",
+    "dueAt": "1405/01/16",
+    "endAt": "1405/01/16",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 1,
+    "actualHours": 1,
+    "storyPoint": null,
+    "goal": "-",
+    "label": null
+  },
+  {
+    "project": "Logistic",
+    "task": "\u062a\u063a\u06cc\u06cc\u0631 \u0632\u0645\u0627\u0646 \u0622\u0645\u0627\u062f\u0647 \u0633\u0627\u0632\u06cc \u0633\u0641\u0627\u0631\u0634",
+    "assignee": "\u0627\u0645\u06cc\u0631\u0631\u0636\u0627 \u062c\u0648\u0627\u0646\u0645\u0631\u062f\u06cc",
+    "responsibility": "BE",
+    "team": "\u062a\u06cc\u0645 \u0628\u06a9 \u0627\u0646\u062f",
+    "createdAt": "1405/01/08",
+    "startAt": "1405/01/18",
+    "dueAt": "1405/01/18",
+    "endAt": "1405/01/18",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 2,
+    "actualHours": 2,
+    "storyPoint": null,
+    "goal": "-",
+    "label": null
+  },
+  {
+    "project": "Logistic",
+    "task": "\u062a\u063a\u06cc\u06cc\u0631 \u0644\u0648\u06a9\u06cc\u0634\u0646 \u0645\u0642\u0635\u062f \u0633\u0641\u0627\u0631\u0634",
+    "assignee": "\u0627\u0645\u06cc\u0631\u0631\u0636\u0627 \u062c\u0648\u0627\u0646\u0645\u0631\u062f\u06cc",
+    "responsibility": "BE",
+    "team": "\u062a\u06cc\u0645 \u0628\u06a9 \u0627\u0646\u062f",
+    "createdAt": "1405/01/08",
+    "startAt": "1405/01/18",
+    "dueAt": "1405/01/18",
+    "endAt": "1405/01/18",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 2,
+    "actualHours": 2,
+    "storyPoint": null,
+    "goal": "-",
+    "label": null
+  },
+  {
+    "project": "Logistic",
+    "task": "\u0648\u0628 \u0633\u0631\u0648\u06cc\u0633 \u0628\u0631\u0627\u06cc \u0627\u06cc\u0646\u06a9\u0647 orderStore \u0628\u062f\u06cc\u0645 \u0648 \u0628\u06af\u0645 \u06a9\u0647 \u0645\u06cc\u0634\u0647 \u0633\u0641\u0627\u0631\u0634 \u0631\u0648 \u0627\u0632 \u0644\u06cc\u0633\u062a \u062d\u0630\u0641 \u06a9\u0631\u062f \u06cc\u0627 \u0646\u0647",
+    "assignee": "\u0627\u0645\u06cc\u0631\u0631\u0636\u0627 \u062c\u0648\u0627\u0646\u0645\u0631\u062f\u06cc",
+    "responsibility": "BE",
+    "team": "\u062a\u06cc\u0645 \u0628\u06a9 \u0627\u0646\u062f",
+    "createdAt": "1405/01/08",
+    "startAt": "1405/01/18",
+    "dueAt": "1405/01/18",
+    "endAt": "1405/01/18",
+    "priority": "-",
+    "status": "\u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647",
+    "estimateHours": 4,
+    "actualHours": 4,
+    "storyPoint": null,
+    "goal": "-",
+    "label": null
+  }
+];
+
+
+function isDone(status) {
+  if (!status) return false;
+  const text = status.toString().trim().toLowerCase();
+  return ['انجام شده', 'done', 'completed', 'complete'].includes(text);
+}
+function isInProgress(status) {
+  if (!status) return false;
+  const text = status.toString().trim().toLowerCase();
+  return ['درحال انجام', 'in progress', 'progress', 'doing', 'started'].includes(text);
+}
+function isStopped(status) {
+  if (!status) return false;
+  const text = status.toString().trim().toLowerCase();
+  return ['متوقف شده', 'stopped', 'blocked', 'cancelled', 'canceled'].includes(text);
+}
+function isBug(label) {
+  if (!label) return false;
+  const t = label.toString().trim().toLowerCase();
+  return ['bug', 'bugs', '🐛 bug', 'buggy'].includes(t) || t.includes('bug');
+}
+function parseDate(value) {
+  if (!value || value === '-') return null;
+  if (typeof value === 'string') {
+    const fixed = value.trim();
+    const match = fixed.match(/^(\d{3,4})\D?(\d{1,2})\D?(\d{1,2})$/);
+    if (match) {
+      const year = Number(match[1]);
+      const month = Number(match[2]);
+      const day = Number(match[3]);
+      return { year, month, day, original: fixed };
+    }
+  }
+  return null;
+}
+function dateToOffset(date) {
+  if (!date) return 0;
+  const year = date.year;
+  const month = date.month;
+  const day = date.day;
+  const monthLengths = [31,31,31,31,31,31,30,30,30,30,30,29];
+  let days = (year - 1300) * 365;
+  days += Math.floor((year - 1300) / 4);
+  for (let i = 1; i < month; i++) {
+    days += monthLengths[i - 1] || 30;
+  }
+  days += day;
+  return days;
+}
+function getTaskRange(tasks) {
+  const dates = new Set();
+  tasks.forEach(task => {
+    ['startAt','endAt','dueAt'].forEach(key => {
+      const date = parseDate(task[key]);
+      if (date) dates.add(date.original);
+    });
+  });
+  const sorted = Array.from(dates).sort();
+  return sorted;
+}
+function pick(task) {
+  const mapping = {
+    project: ['project', 'پروژه'],
+    task: ['task', 'وظیفه'],
+    assignee: ['assignee', 'مسئول'],
+    responsibility: ['responsibility', 'مسئولیت'],
+    team: ['team', 'تیم مسئول'],
+    createdAt: ['createdAt', 'تاریخ ایجاد'],
+    startAt: ['startAt', 'تاریخ شروع'],
+    dueAt: ['dueAt', 'مهلت انجام'],
+    endAt: ['endAt', 'تاریخ پایان'],
+    priority: ['priority', 'اولویت'],
+    status: ['status', 'وضعیت', 'وضعییت'],
+    estimateHours: ['estimateHours', 'برآورد اولیه (ساعت)'],
+    actualHours: ['actualHours', 'زمان پیاده‌سازی (ساعت)'],
+    storyPoint: ['storyPoint', 'story point'],
+    goal: ['goal', 'هدف'],
+    label: ['label', 'برچسب'],
+  };
+  const normalized = {};
+  for (const key of Object.keys(mapping)) {
+    for (const source of mapping[key]) {
+      if (task[source] !== undefined) {
+        normalized[key] = task[source];
+        break;
+      }
+    }
+  }
+  return normalized;
+}
+function render() {
+  const tasks = rawTasks.map(pick).map(task => ({
+    ...task,
+    statusLabel: task.status || '-',
+    project: task.project || 'بدون پروژه',
+    team: task.team || task.responsibility || 'بدون تیم',
+    assignee: task.assignee || '-',
+    startAt: task.startAt || '-',
+    endAt: task.endAt || '-',
+    dueAt: task.dueAt || '-',
+    label: task.label || '-',
+    task: task.task || '-',
+    actualHours: task.actualHours == null || task.actualHours === '' ? null : Number(task.actualHours),
+    estimateHours: task.estimateHours == null || task.estimateHours === '' ? null : Number(task.estimateHours),
+  }));
+  const total = tasks.length;
+  const done = tasks.filter(t => isDone(t.statusLabel)).length;
+  const inProgress = tasks.filter(t => isInProgress(t.statusLabel)).length;
+  const stopped = tasks.filter(t => isStopped(t.statusLabel)).length;
+  const totalHours = tasks.reduce((sum,t) => sum + (t.actualHours || 0), 0);
+  const bugTasks = tasks.filter(t => isBug(t.label));
+  const bugCount = bugTasks.length;
+  const bugOpen = bugTasks.filter(t => !isDone(t.statusLabel)).length;
+  const bugDone = bugCount - bugOpen;
+  const bugRatio = total ? ((bugCount / total) * 100).toFixed(1) : '0.0';
+  document.getElementById('task-count').textContent = `🔢 ${total} تسک در این اسپرینت`;
+  const reportRange = tasks.reduce((range, task) => {
+    const start = parseDate(task.startAt);
+    const end = parseDate(task.endAt);
+    if (!start && !end) return range;
+    const values = [start, end].filter(Boolean);
+    const dates = values.map(d => d.original);
+    range.push(...dates);
+    return range;
+  }, []);
+  const uniqueSorted = Array.from(new Set(reportRange)).sort();
+  const headerRange = uniqueSorted.length ? `${uniqueSorted[0]} تا ${uniqueSorted[uniqueSorted.length - 1]}` : 'بدون تاریخ';
+  document.querySelector('#report-range strong').textContent = headerRange;
+  document.getElementById('footer').textContent = `گزارش تولید شده توسط n8n automation — ${headerRange}`;
+  const labels = [
+    {num: done, label: '✅ انجام شده', color: 'green'},
+    {num: inProgress, label: '🔄 در حال انجام', color: 'orange'},
+    {num: stopped, label: '🚫 متوقف شده', color: 'red'},
+    {num: `${totalHours.toFixed(1).replace(/\.0$/, '')}h`, label: '⏱ کل ساعت کار', color: 'blue'},
+    {num: `${bugRatio}%`, label: '🐛 نسبت باگ', color: 'purple'},
+  ];
+  document.getElementById('kpi-row').innerHTML = labels.map(item => `
+    <div class="kpi ${item.color}"><div class="num">${item.num}</div><div class="label">${item.label}</div></div>
+  `).join('');
+  const hoursByProject = {};
+  tasks.forEach(task => {
+    const hours = task.actualHours || 0;
+    hoursByProject[task.project] = (hoursByProject[task.project] || 0) + hours;
+  });
+  const projectItems = Object.entries(hoursByProject).sort((a,b) => b[1] - a[1]);
+  const maxHours = projectItems[0] ? projectItems[0][1] : 1;
+  document.getElementById('project-hours').innerHTML = projectItems.map(([project,hours]) => {
+    const ratio = maxHours ? (hours / maxHours) * 100 : 0;
+    const color = project.includes('AI') ? '#a78bfa' : project.includes('Logistic') ? '#38bdf8' : project.includes('Store') ? '#f472b6' : project.includes('Dev') ? '#fb923c' : '#34d399';
+    return `
+      <div class="bar-wrapper">
+        <div class="bar-info"><span style="color:#fff;font-weight:500">${project}</span><span style="color:${color};font-weight:bold">${hours.toFixed(1).replace(/\.0$/, '')}h</span></div>
+        <div class="bar-container"><div class="bar-fill" style="width:${ratio}%;background:linear-gradient(90deg,${color}99,${color})"></div></div>
+      </div>
+    `;
+  }).join('') || '<div style="color:var(--muted)">داده‌ای برای نمودار پروژه وجود ندارد.</div>';
+  const labelCounts = {};
+  tasks.forEach(task => {
+    const label = task.label || 'بدون برچسب';
+    labelCounts[label] = (labelCounts[label] || 0) + 1;
+  });
+  const labelsHtml = Object.entries(labelCounts).sort((a,b)=>b[1]-a[1]).map(([label,count]) => `
+    <div class="bug-stat-row"><span style="color:var(--muted)">${label}</span><span style="color:#fff;font-weight:bold">${count}</span></div>
+  `).join('');
+  document.getElementById('bug-section').innerHTML = `
+    <div class="bug-card">
+      <div class="section-title">🐛 آنالیز باگ‌ها</div>
+      <div class="donut-wrap">
+        <div class="donut"><span class="donut-num">${bugRatio}%</span></div>
+        <div class="bug-stats">
+          <div class="bug-stat-row"><span>کل باگ‌ها</span><span style="color:#f87171;font-weight:bold">${bugCount}</span></div>
+          <div class="bug-stat-row"><span>کل تسک‌ها</span><span style="color:#fff">${total}</span></div>
+          <div class="bug-stat-row"><span>باگ‌های حل‌شده</span><span style="color:#34d399">${bugDone}</span></div>
+          <div class="bug-stat-row"><span>باگ‌های باز</span><span style="color:#fbbf24">${bugOpen}</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="bug-card">
+      <div class="section-title">🏷 توزیع برچسب‌ها</div>
+      ${labelsHtml}
+    </div>
+  `;
+  const projectGroups = {};
+  tasks.forEach(task => {
+    projectGroups[task.project] = projectGroups[task.project] || [];
+    projectGroups[task.project].push(task);
+  });
+  const projects = Object.entries(projectGroups).sort((a,b) => {
+    const sumA = a[1].reduce((sum,t)=>sum+(t.actualHours||0),0);
+    const sumB = b[1].reduce((sum,t)=>sum+(t.actualHours||0),0);
+    return sumB - sumA;
+  });
+  const ganttRange = getTaskRange(tasks);
+  const ganttMin = ganttRange[0];
+  const ganttMax = ganttRange[ganttRange.length - 1];
+  const ganttMinDate = parseDate(ganttMin);
+  const ganttMaxDate = parseDate(ganttMax);
+  const minOffset = dateToOffset(ganttMinDate);
+  const maxOffset = dateToOffset(ganttMaxDate);
+  const totalSpan = Math.max(1, maxOffset - minOffset);
+  const axisLabels = ganttRange.map(date => `
+    <div class="gt-axis-label" style="left:${((dateToOffset(parseDate(date)) - minOffset) / totalSpan) * 100}%">${date}</div>
+  `).join('');
+  const ganttHtml = projects.map(([project,tasks], index) => {
+    const taskRows = tasks.map(task => {
+      const start = parseDate(task.startAt);
+      const end = parseDate(task.endAt);
+      const startOffset = start ? dateToOffset(start) : minOffset;
+      const endOffset = end ? dateToOffset(end) : startOffset + 1;
+      const left = ((startOffset - minOffset) / totalSpan) * 100;
+      const width = ((Math.max(endOffset, startOffset + 1) - startOffset) / totalSpan) * 100;
+      const statusColor = isDone(task.statusLabel) ? '#34d399' : isStopped(task.statusLabel) ? '#f87171' : '#475569';
+      return `
+        <div class="gt-row">
+          <div class="gt-label" title="${task.task}">
+            <div class="gt-label-name">${task.task}</div>
+            <div class="gt-label-meta">${task.assignee} · ${task.startAt}</div>
+          </div>
+          <div class="gt-track">
+            <div style="position:absolute;top:0;bottom:0;left:${left}%;width:2px;background:rgba(248,113,113,0.5);pointer-events:none"></div>
+            <div class="gt-bar" style="left:${left}%;width:${width}%;background:${statusColor}"
+                 title="${task.task}
+${task.startAt} → ${task.endAt}
+مهلت: ${task.dueAt}
+وضعیت: ${task.statusLabel}">
+              <span class="gt-bar-label">${task.task}</span>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+    const color = index === 0 ? '#38bdf8' : index === 1 ? '#a78bfa' : index === 2 ? '#34d399' : index === 3 ? '#fb923c' : '#f472b6';
+    return `
+      <div class="gantt-proj-block">
+        <div class="gantt-proj-toggle" onclick="toggleGantt(${index})" style="border-right:4px solid ${color}">
+          <div style="display:flex;align-items:center;gap:10px">
+            <span style="color:${color};font-weight:bold">${project}</span>
+            <span style="background:rgba(255,255,255,0.07);color:#94a3b8;padding:2px 10px;border-radius:20px;font-size:0.75rem">${tasks.length} تسک</span>
+          </div>
+          <span class="gt-toggle-icon" id="gicon-${index}">▼</span>
+        </div>
+        <div class="gantt-proj-body" id="gbody-${index}" style="display:none">
+          <div class="gt-inner">${taskRows}</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+  document.getElementById('gantt-card').innerHTML = `
+    <div class="gantt-legend">
+      <div class="gantt-legend-item"><div class="gantt-legend-dot" style="background:#34d399"></div>به موقع تحویل داده شد</div>
+      <div class="gantt-legend-item"><div class="gantt-legend-dot" style="background:#f87171"></div>دیرتر از مهلت انجام</div>
+      <div class="gantt-legend-item"><div class="gantt-legend-dot" style="background:#fbbf24"></div>متوقف شده</div>
+      <div class="gantt-legend-item"><div class="gantt-legend-dot" style="background:#475569"></div>در حال انجام</div>
+    </div>
+    <div class="gantt-axis">${axisLabels}</div>
+    ${ganttHtml}
+  `;
+  const teamCards = projects.map(([project,tasks], index) => {
+    const projectColor = index === 0 ? '#38bdf8' : index === 1 ? '#a78bfa' : index === 2 ? '#34d399' : index === 3 ? '#fb923c' : '#f472b6';
+    const totalHours = tasks.reduce((sum,t)=>sum+(t.actualHours||0),0);
+    const doneCount = tasks.filter(t => isDone(t.statusLabel)).length;
+    const inProgressCount = tasks.filter(t => isInProgress(t.statusLabel)).length;
+    const bugCount = tasks.filter(t => isBug(t.label)).length;
+    const rowsHtml = tasks.sort((a,b)=> (b.actualHours||0) - (a.actualHours||0)).map(task => `
+      <tr>
+        <td>${task.task}${isBug(task.label) ? '<span style="background:rgba(248,113,113,0.15);color:#f87171;padding:2px 7px;border-radius:10px;font-size:0.72rem;margin-right:4px">🐛 Bug</span>' : ''}</td>
+        <td><span style="color:${task.team.includes('UI') ? '#f472b6' : task.team.includes('back') || task.team.includes('بک') ? '#38bdf8' : task.team.includes('فلاتر') ? '#a78bfa' : '#34d399'}">${task.team}</span></td>
+        <td>${task.assignee}</td>
+        <td>${task.startAt}</td>
+        <td>${task.endAt}</td>
+        <td>${task.actualHours == null ? '-' : task.actualHours.toFixed(1).replace(/\.0$/, '')}</td>
+        <td><span style="background:${isDone(task.statusLabel)?'rgba(52,211,153,0.1)':isInProgress(task.statusLabel)?'rgba(251,191,36,0.1)':'rgba(248,113,113,0.1)'};color:${isDone(task.statusLabel)?'#34d399':isInProgress(task.statusLabel)?'#fbbf24':'#f87171'};padding:3px 10px;border-radius:20px;font-size:0.75rem">${task.statusLabel}</span></td>
+      </tr>
+    `).join('');
+    return `
+      <div class="team-card" style="border-right:4px solid ${projectColor}">
+        <div class="team-header" onclick="toggle(${index})">
+          <div class="team-title">
+            <span class="team-dot" style="background:${projectColor}"></span>
+            <strong style="font-size:1rem">${project}</strong>
+            <span class="team-badge">${tasks.length} تسک</span>
+            ${bugCount ? `<span class="stat-pill" style="background:rgba(248,113,113,0.1);color:#f87171">${bugCount} 🐛</span>` : ''}
+          </div>
+          <div class="team-stats">
+            <span class="stat-pill green">${doneCount} ✅</span>
+            <span class="stat-pill orange">${inProgressCount} 🔄</span>
+            <span class="stat-pill blue">${totalHours.toFixed(1).replace(/\.0$/, '')}h</span>
+            <span class="toggle-icon" id="icon-${index}">▼</span>
+          </div>
+        </div>
+        <div class="bar-mini"><div style="height:100%;width:${Math.min(100, maxHours ? (totalHours / maxHours) * 100 : 0)}%;background:${projectColor}"></div></div>
+        <div class="team-body" id="body-${index}" style="display:none">
+          <table>
+            <thead><tr><th>وظیفه</th><th>تیم</th><th>مسئول</th><th>شروع</th><th>پایان</th><th>ساعت</th><th>وضعیت</th></tr></thead>
+            <tbody>${rowsHtml}</tbody>
+          </table>
+        </div>
+      </div>
+    `;
+  }).join('');
+  document.getElementById('team-cards').innerHTML = teamCards;
+}
+function toggle(idx) {
+  const body = document.getElementById('body-' + idx);
+  const icon = document.getElementById('icon-' + idx);
+  if (!body) return;
+  if (body.style.display === 'none') { body.style.display = 'block'; icon.style.transform = 'rotate(180deg)'; }
+  else { body.style.display = 'none'; icon.style.transform = 'rotate(0)'; }
+}
+function toggleGantt(idx) {
+  const body = document.getElementById('gbody-' + idx);
+  const icon = document.getElementById('gicon-' + idx);
+  if (!body) return;
+  if (body.style.display === 'none') { body.style.display = 'block'; icon.style.transform = 'rotate(180deg)'; }
+  else { body.style.display = 'none'; icon.style.transform = 'rotate(0)'; }
+}
+render();
+</script>
+</body>
+</html>
